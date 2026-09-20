@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Log a New Sighting – Nature-Soham</title>
+
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #f5f7f8;
+      color: #222;
+      padding: 20px;
+    }
+
+    h1 {
+      text-align: center;
+      color: #2e7d32;
+      margin-bottom: 10px;
+    }
+
+    p {
+      text-align: center;
+      margin-bottom: 30px;
+      color: #555;
+    }
+
+    form {
+      max-width: 700px;
+      margin: 0 auto;
+      background: white;
+      padding: 25px;
+      border-radius: 8px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    }
+
+    label {
+      display: block;
+      margin-top: 20px;
+      font-weight: bold;
+    }
+
+    input, select, textarea {
+      width: 100%;
+      padding: 12px;
+      margin-top: 6px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      font-size: 1rem;
+    }
+
+    textarea {
+      height: 120px;
+      resize: vertical;
+    }
+
+    button {
+      margin-top: 30px;
+      width: 100%;
+      padding: 14px;
+      background: #2e7d32;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      font-size: 1.2rem;
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    button:hover {
+      background: #256628;
+    }
+
+    .back-link {
+      display: block;
+      text-align: center;
+      margin-top: 20px;
+      color: #2e7d32;
+      text-decoration: none;
+      font-weight: bold;
+    }
+  </style>
+</head>
+
+<body>
+
+  <h1>Log a New Sighting</h1>
+  <p>Help us document wildlife in and around Soham.</p>
+
+  <form id="sightingForm">
+
+    <label for="specimen">What type of specimen did you see?</label>
+    <select id="specimen" required>
+      <option value="">Select type...</option>
+      <option>Bird</option>
+      <option>Mammal</option>
+      <option>Insect</option>
+      <option>Amphibian</option>
+      <option>Reptile</option>
+      <option>Plant</option>
+      <option>Arachnid</option>
+      <option>Fungi</option>
+      <option>Fish</option>
+      <option>Other</option>
+    </select>
+
+    <label for="species">What species or animal name do you believe it was?</label>
+    <input id="species" type="text" required>
+
+    <label for="description">Please describe the sighting</label>
+    <textarea id="description" required></textarea>
+
+    <label for="location">Where did you see the animal?</label>
+    <input id="location" type="text" required>
+
+    <label for="date">What was the date of the sighting?</label>
+    <input id="date" type="date" required>
+
+    <label for="time">What time of day was the animal seen?</label>
+    <select id="time" required>
+      <option value="">Select time...</option>
+      <option>Dawn</option>
+      <option>Morning</option>
+      <option>Afternoon</option>
+      <option>Dusk</option>
+      <option>Night</option>
+    </select>
+
+    <label for="count">How many animals did you see?</label>
+    <input id="count" type="number" min="1" required>
+
+    <label for="observer">Your name</label>
+    <input id="observer" type="text" required>
+
+    <button type="submit">Submit Sighting</button>
+  </form>
+
+  <a class="back-link" href="index.html">← Back to Home</a>
+
+  <script>
+    document.getElementById("sightingForm").addEventListener("submit", function(event) {
+      event.preventDefault();
+
+      // Build a CSV row matching your existing CSV structure
+      const row = [
+        document.getElementById("specimen").value,
+        document.getElementById("species").value,
+        document.getElementById("description").value.replace(/,/g, ";"),
+        document.getElementById("location").value.replace(/,/g, ";"),
+        document.getElementById("date").value,
+        document.getElementById("time").value,
+        document.getElementById("count").value,
+        document.getElementById("observer").value.replace(/,/g, ";")
+      ];
+
+      const csvLine = row.join(",") + "\n";
+
+      alert(
+        "Your sighting has been prepared as a CSV row:\n\n" +
+        csvLine +
+        "\nNext step: this will be automatically appended to your database.csv file."
+      );
+    });
+  </script>
+
+</body>
+</html>
