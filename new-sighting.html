@@ -30,25 +30,37 @@
     <h1>Submit a New Wildlife Sighting</h1>
     <p>Please complete the form below to add a new sighting to the Nature Soham database.</p>
 
-    <form id="sighting-form">
+<form id="sighting-form">
 
-        <label for="species">Species</label><br>
-        <input type="text" id="species" name="species" required><br><br>
+    <div class="form-row">
+        <label for="species">Species</label>
+        <input type="text" id="species" name="species" required>
+    </div>
 
-        <label for="location">Location</label><br>
-        <input type="text" id="location" name="location" required><br><br>
+    <div class="form-row">
+        <label for="location">Location</label>
+        <input type="text" id="location" name="location" required>
+    </div>
 
-        <label for="date">Date</label><br>
-        <input type="date" id="date" name="date" required><br><br>
+    <div class="form-row">
+        <label for="date">Date</label>
+        <input type="date" id="date" name="date" required>
+    </div>
 
-        <label for="observer">Observer Name</label><br>
-        <input type="text" id="observer" name="observer" required><br><br>
+    <div class="form-row">
+        <label for="observer">Observer Name</label>
+        <input type="text" id="observer" name="observer" required>
+    </div>
 
-        <label for="notes">Additional Notes</label><br>
-        <textarea id="notes" name="notes" rows="5"></textarea><br><br>
+    <div class="form-row">
+        <label for="notes">Additional Notes</label>
+        <textarea id="notes" name="notes" rows="5"></textarea>
+    </div>
 
-        <button type="submit">Submit Sighting</button>
-    </form>
+    <button type="submit">Submit Sighting</button>
+
+</form>
+
 
 </main>
 
