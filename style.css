@@ -39,6 +39,31 @@ nav a:hover {
 }
 
 /* ===========================
+   Logo Header
+   =========================== */
+
+.site-header {
+    background: #2a4d2e;
+    padding: 1rem;
+    text-align: center;
+}
+
+.site-logo {
+    height: 120px;   /* Adjust size if needed */
+    width: auto;
+    cursor: pointer;
+    transition: transform 0.2s ease;
+}
+
+.site-logo:hover {
+    transform: scale(1.05);
+}
+
+.logo-link {
+    text-decoration: none;
+}
+
+/* ===========================
    Main Content
    =========================== */
 
