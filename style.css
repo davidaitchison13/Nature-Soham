@@ -64,20 +64,34 @@ body {
     display: block;            /* removes inline spacing issues */
 }
 
-
-
 .site-logo:hover {
       transform: scale(1.05);
       box-shadow: 0 6px 16px rgba(0,0,0,0.35); /* hover glow */
 }
 
+/* Branding area */
 .site-branding {
+    width: 100%;
     display: flex;
     flex-direction: column;
-    align-items: center;   /* centres the logo horizontally */
+    align-items: center;      /* centres logo + text */
     justify-content: center;
-    width: 100%;
     text-align: center;
+    margin-bottom: 20px;
+}
+/* Title */
+.site-title {
+    font-size: 2.2rem;
+    color: #2f5d2f;
+    margin: 0;
+}
+
+/* Tagline */
+.site-description {
+    font-size: 1rem;
+    color: #a33a2a;
+    margin: 5px 0 0 0;
+    letter-spacing: 1px;
 }
 
 /* ===========================
