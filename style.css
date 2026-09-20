@@ -47,15 +47,16 @@ body {
 
 /* Oval logo container */
 .site-logo {
-    width: 260px;              /* adjust as needed */
-    height: 180px;             /* adjust as needed */
+    width: 300px;              /* adjust as needed */
+    height: 150px;             /* adjust as needed */
     border-radius: 50%;        /* creates the oval shape */
     overflow: hidden;          /* ensures image never spills out */
-    background-color: #ffffff; /* optional: keeps clean white interior */
+    border: 3px solid #c9a64b; /* your gold border */
     display: flex;
     align-items: center;
     justify-content: center;
-    border: 3px solid #c9a64b; /* your gold border */
+    background-color: #ffffff; /* optional: keeps clean white interior */
+    margin-bottom: 15px;
 }
 
 /* Logo image inside the oval */
