@@ -40,18 +40,20 @@ body {
 }
 
 .site-logo {
-    height: 100px;
-    width: 200px;                 /* wider oval */
-    object-fit: cover;            /* zoom/crop the image to fit the oval */
-    border-radius: 50%;           /* makes the container circular/oval */
-    overflow: hidden;             /* hides corners of the original image */
-    cursor: pointer;
-    transition: transform 0.2s ease;
+      height: 100px;
+      width: 200px;                 /* wider oval */
+      object-fit: cover;            /* zoom/crop the image to fit the oval */
+      border-radius: 50%;           /* makes the container circular/oval */
+      overflow: hidden;             /* hides corners of the original image */
+      border: 4px solid var(--gold-accent);   /* thin gold border */
+      box-shadow: 0 4px 10px rgba(0,0,0,0.25); /* soft drop shadow */
+      cursor: pointer;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
-
 .site-logo:hover {
-    transform: scale(1.05);
+      transform: scale(1.05);
+      box-shadow: 0 6px 16px rgba(0,0,0,0.35); /* hover glow */
 }
 
 /* ===========================
