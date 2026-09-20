@@ -224,6 +224,46 @@ form {
     resize: vertical;
 }
 
+/* ===========================
+   Form Buttons
+   =========================== */
+
+.form-buttons {
+    display: flex;
+    justify-content: flex-end;   /* pushes buttons to the right */
+    gap: 1rem;
+    margin-top: 2rem;
+}
+
+.form-buttons button {
+    padding: 0.8rem 1.6rem;
+    font-size: 1rem;
+    border-radius: 6px;
+    cursor: pointer;
+    border: none;
+}
+
+/* Submit button styling */
+.form-buttons button[type="submit"] {
+    background: var(--moss-green);
+    color: white;
+}
+
+.form-buttons button[type="submit"]:hover {
+    background: var(--forest-green);
+}
+
+/* Clear button styling */
+.clear-button {
+    background: var(--earth-brown);
+    color: white;
+}
+
+.clear-button:hover {
+    background: var(--gold-accent);
+    color: var(--forest-green);
+}
+
 
 .site-footer a:hover {
     color: white;
