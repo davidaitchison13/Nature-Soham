@@ -80,6 +80,12 @@
       text-decoration: none;
       font-weight: bold;
     }
+
+    .note {
+      font-size: 0.9rem;
+      color: #777;
+      margin-top: 10px;
+    }
   </style>
 </head>
 
@@ -90,6 +96,7 @@
 
   <form id="sightingForm">
 
+    <!-- 1. What type of specimen did you see? -->
     <label for="specimen">What type of specimen did you see?</label>
     <select id="specimen" required>
       <option value="">Select type...</option>
@@ -105,18 +112,23 @@
       <option>Other</option>
     </select>
 
+    <!-- 2. What species or animal name do you believe it was? -->
     <label for="species">What species or animal name do you believe it was?</label>
     <input id="species" type="text" required>
 
+    <!-- 3. Please describe the sighting -->
     <label for="description">Please describe the sighting</label>
     <textarea id="description" required></textarea>
 
+    <!-- 4. Where did you see the animal? -->
     <label for="location">Where did you see the animal?</label>
     <input id="location" type="text" required>
 
+    <!-- 5. What was the date of the sighting? -->
     <label for="date">What was the date of the sighting?</label>
     <input id="date" type="date" required>
 
+    <!-- 6. What time of day was the animal seen? -->
     <label for="time">What time of day was the animal seen?</label>
     <select id="time" required>
       <option value="">Select time...</option>
@@ -127,11 +139,18 @@
       <option>Night</option>
     </select>
 
+    <!-- 7. How many animals did you see? -->
     <label for="count">How many animals did you see?</label>
     <input id="count" type="number" min="1" required>
 
+    <!-- 8. Your name -->
     <label for="observer">Your name</label>
     <input id="observer" type="text" required>
+
+    <p class="note">
+      When you submit, your sighting will be converted into a new row for the
+      <code>Database.csv</code> file, matching the existing columns.
+    </p>
 
     <button type="submit">Submit Sighting</button>
   </form>
@@ -142,7 +161,16 @@
     document.getElementById("sightingForm").addEventListener("submit", function(event) {
       event.preventDefault();
 
-      // Build a CSV row matching your existing CSV structure
+      // Build a CSV row that matches the Database.csv header order exactly:
+      // What type of specimen did you see?,
+      // What species or animal name do you believe it was?,
+      // Please describe the sighting,
+      // Where did you see the animal?,
+      // What was the date of the sighting?,
+      // What time of day was the animal seen?,
+      // How many animals did you see?,
+      // Your name
+
       const row = [
         document.getElementById("specimen").value,
         document.getElementById("species").value,
@@ -156,11 +184,14 @@
 
       const csvLine = row.join(",") + "\n";
 
+      // For now, just show the CSV line so you can verify it matches Database.csv
       alert(
-        "Your sighting has been prepared as a CSV row:\n\n" +
+        "New sighting prepared as CSV:\n\n" +
         csvLine +
-        "\nNext step: this will be automatically appended to your database.csv file."
+        "\n\nThis line is ready to be appended to Database.csv."
       );
+
+      // Later, this is where the GitHub Action trigger will go.
     });
   </script>
 
