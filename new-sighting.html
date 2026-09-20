@@ -33,33 +33,67 @@
 <form id="sighting-form">
 
     <div class="form-row">
-        <label for="species">Species</label>
+        <label for="specimen">What type of specimen did you see?</label>
+        <select id="specimen" name="specimen" required>
+            <option value="">Select type...</option>
+            <option>Amphibian</option>
+            <option>Arachnid</option>
+            <option>Bird</option>
+            <option>Fish</option>
+            <option>Fungi</option>
+            <option>Insect</option>
+            <option>Mammal</option>
+            <option>Plant</option>
+            <option>Reptile</option>
+            <option>Other</option>
+        </select>
+    </div>
+
+    <div class="form-row">
+        <label for="species">What species or animal name do you believe it was?</label>
         <input type="text" id="species" name="species" required>
     </div>
 
     <div class="form-row">
-        <label for="location">Location</label>
+        <label for="description">Please describe the sighting</label>
+        <textarea id="description" name="description" rows="4" required></textarea>
+    </div>
+
+    <div class="form-row">
+        <label for="location">Where did you see the animal?</label>
         <input type="text" id="location" name="location" required>
     </div>
 
     <div class="form-row">
-        <label for="date">Date</label>
+        <label for="date">What was the date of the sighting?</label>
         <input type="date" id="date" name="date" required>
     </div>
 
     <div class="form-row">
-        <label for="observer">Observer Name</label>
-        <input type="text" id="observer" name="observer" required>
+        <label for="time">What time of day was the animal seen?</label>
+        <select id="time" name="time" required>
+            <option value="">Select time...</option>
+            <option>Dawn</option>
+            <option>Morning</option>
+            <option>Afternoon</option>
+            <option>Dusk</option>
+            <option>Night</option>
+        </select>
     </div>
 
     <div class="form-row">
-        <label for="notes">Additional Notes</label>
-        <textarea id="notes" name="notes" rows="5"></textarea>
+        <label for="count">How many animals did you see?</label>
+        <input type="number" id="count" name="count" min="1" required>
+    </div>
+
+    <div class="form-row">
+        <label for="observer">Your name</label>
+        <input type="text" id="observer" name="observer" required>
     </div>
 
     <div class="form-buttons">
-        <button type="reset" class="clear-button">Clear Form</button>
         <button type="submit">Submit Sighting</button>
+        <button type="reset" class="clear-button">Clear Form</button>
     </div>
 
 </form>
