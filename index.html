@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Nature Soham – Wildlife Sightings</title>
+    <title>Nature Soham – Home</title>
     <link rel="stylesheet" href="style.css">
 </head>
 
@@ -18,37 +18,8 @@
 </header>
 
 <h1>Welcome to Nature Soham</h1>
-<p>Explore wildlife sightings submitted by the community.</p>
-
-<div id="sightings-table"></div>
-
-<script>
-    // Load and display the CSV data
-    fetch('Database.csv')
-        .then(response => response.text())
-        .then(data => {
-            const rows = data.split('\n').map(row => row.split(','));
-            let table = '<table><tr>';
-
-            // Header row
-            rows[0].forEach(header => {
-                table += `<th>${header}</th>`;
-            });
-            table += '</tr>';
-
-            // Data rows
-            for (let i = 1; i < rows.length; i++) {
-                table += '<tr>';
-                rows[i].forEach(cell => {
-                    table += `<td>${cell}</td>`;
-                });
-                table += '</tr>';
-            }
-
-            table += '</table>';
-            document.getElementById('sightings-table').innerHTML = table;
-        });
-</script>
+<p>Explore wildlife in and around Soham.  
+Use the menu to submit sightings or browse the database.</p>
 
 </body>
 </html>
