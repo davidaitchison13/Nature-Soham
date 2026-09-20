@@ -225,6 +225,34 @@ form {
 }
 
 /* ===========================
+   Dropdown (select) styling
+   =========================== */
+
+.form-row select {
+    flex: 1;
+    padding: 0.6rem;
+    border: 2px solid var(--moss-green);
+    border-radius: 6px;
+    font-size: 1rem;
+    background-color: white;
+    color: var(--forest-green);
+    width: 100%;
+    box-sizing: border-box;
+    cursor: pointer;
+}
+
+/* Optional: improve appearance of the dropdown arrow */
+.form-row select {
+    appearance: none;           /* removes default browser styling */
+    background-image: url("data:image/svg+xml;utf8,<svg fill='%23666666' height='24' viewBox='0 0 24 24' width='24' xmlns='http://www.w3.org/2000/svg'><path d='M7 10l5 5 5-5z'/></svg>");
+    background-repeat: no-repeat;
+    background-position: right 0.8rem center;
+    background-size: 1rem;
+    padding-right: 2.2rem;      /* space for the arrow */
+}
+
+
+/* ===========================
    Form Buttons
    =========================== */
 
