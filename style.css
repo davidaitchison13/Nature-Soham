@@ -41,7 +41,7 @@ body {
 
 .site-logo {
     height: 120px;
-    width: 120px;                 /* force a perfect circle/oval container */
+    width: 200px;                 /* wider oval */
     object-fit: cover;            /* zoom/crop the image to fit the oval */
     border-radius: 50%;           /* makes the container circular/oval */
     overflow: hidden;             /* hides corners of the original image */
