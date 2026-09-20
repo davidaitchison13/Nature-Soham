@@ -158,3 +158,29 @@ tr:nth-child(even) {
 tr:nth-child(odd) {
     background: white;
 }
+/* ===========================
+   Footer
+   =========================== */
+
+.site-footer {
+    width: 100%;
+    background: var(--forest-green);
+    color: white;
+    text-align: center;
+    padding: 1.5rem 0;
+    margin-top: 3rem;
+    box-shadow: 0 -2px 4px rgba(0,0,0,0.15);
+}
+
+.site-footer a {
+    color: var(--gold-accent);
+    text-decoration: none;
+    font-weight: bold;
+    margin: 0 0.5rem;
+    transition: color 0.2s ease;
+}
+
+.site-footer a:hover {
+    color: white;
+}
+
