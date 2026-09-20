@@ -1,40 +1,54 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="style.css">
-  <title>Nature-Soham</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nature Soham – Wildlife Sightings</title>
+    <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
-  
-  <header>
-    <h1>Nature Soham – Wildlife Sightings</h1>
-    <p>Explore, record, and celebrate the wildlife of Soham</p>
-  </header>
-  
-  <nav>
-    <a href="index.html">Sightings</a>
-    <a href="new-sighting.html">Submit New Sighting</a>
-  </nav>
-  
-  <div class="content">
-    <h2>Welcome</h2>
-    <p>
-      Nature-Soham is a community project dedicated to understanding and documenting
-      the wildlife in and around Soham. You can browse existing sightings or contribute
-      your own observations to help build a richer picture of local biodiversity.
-    </p>
 
-    <div class="actions">
-      <a class="btn" href="new-sighting.html">Log a New Sighting</a>
-      <a class="btn" href="sightings.html">Search the Sightings Database</a>
-    </div>
-  </div>
+<header class="site-header">
+    <a href="index.html" class="logo-link">
+        <img src="assets/images/logo-transparent.png"
+             alt="Nature Soham Wildlife Logo"
+             class="site-logo">
+    </a>
+</header>
 
-  <footer>
-    © 2026 Nature-Soham · Community Wildlife Project
-  </footer>
+<h1>Welcome to Nature Soham</h1>
+<p>Explore wildlife sightings submitted by the community.</p>
+
+<div id="sightings-table"></div>
+
+<script>
+    // Load and display the CSV data
+    fetch('Database.csv')
+        .then(response => response.text())
+        .then(data => {
+            const rows = data.split('\n').map(row => row.split(','));
+            let table = '<table><tr>';
+
+            // Header row
+            rows[0].forEach(header => {
+                table += `<th>${header}</th>`;
+            });
+            table += '</tr>';
+
+            // Data rows
+            for (let i = 1; i < rows.length; i++) {
+                table += '<tr>';
+                rows[i].forEach(cell => {
+                    table += `<td>${cell}</td>`;
+                });
+                table += '</tr>';
+            }
+
+            table += '</table>';
+            document.getElementById('sightings-table').innerHTML = table;
+        });
+</script>
 
 </body>
 </html>
