@@ -41,10 +41,14 @@ body {
 
 .site-logo {
     height: 120px;
-    width: auto;
+    width: 120px;                 /* force a perfect circle/oval container */
+    object-fit: cover;            /* zoom/crop the image to fit the oval */
+    border-radius: 50%;           /* makes the container circular/oval */
+    overflow: hidden;             /* hides corners of the original image */
     cursor: pointer;
     transition: transform 0.2s ease;
 }
+
 
 .site-logo:hover {
     transform: scale(1.05);
