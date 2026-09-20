@@ -34,13 +34,15 @@ body {
 
 /* Full header wrapper */
 .site-header {
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;      /* centres everything horizontally */
-    justify-content: center;
-    padding: 20px 0;
-   background-color: var(--forest-green); /* dark green */
+      width: 100%;
+      max-width: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;      /* centres everything horizontally */
+      justify-content: center;
+      padding: 20px 0;
+      background-color: var(--forest-green); /* dark green */
+      box-sizing: border-box;   /* prevents width creep */
 }
 
 /* Oval logo container */
