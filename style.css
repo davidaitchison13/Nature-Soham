@@ -1,0 +1,117 @@
+/* ===========================
+   Global Layout & Typography
+   =========================== */
+
+body {
+    margin: 0;
+    padding: 0;
+    font-family: Arial, Helvetica, sans-serif;
+    background: #f5f7f8;
+    color: #222;
+}
+
+/* ===========================
+   Header & Navigation
+   =========================== */
+
+header {
+    background: #2a4d2e;
+    color: white;
+    padding: 1rem 2rem;
+    text-align: center;
+}
+
+nav {
+    background: #3b6b40;
+    padding: 0.5rem;
+    text-align: center;
+}
+
+nav a {
+    color: white;
+    text-decoration: none;
+    margin: 0 1rem;
+    font-weight: bold;
+}
+
+nav a:hover {
+    text-decoration: underline;
+}
+
+/* ===========================
+   Main Content
+   =========================== */
+
+main {
+    max-width: 900px;
+    margin: 2rem auto;
+    background: white;
+    padding: 2rem;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+}
+
+/* ===========================
+   Table Styling
+   =========================== */
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 1.5rem;
+}
+
+th, td {
+    padding: 0.75rem;
+    border-bottom: 1px solid #ddd;
+}
+
+th {
+    background: #e8efe9;
+    font-weight: bold;
+}
+
+tr:hover {
+    background: #f0f7f1;
+}
+
+/* ===========================
+   Form Styling
+   =========================== */
+
+form {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+input, select, textarea {
+    padding: 0.6rem;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+button {
+    background: #2a4d2e;
+    color: white;
+    padding: 0.7rem 1rem;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+button:hover {
+    background: #3b6b40;
+}
+
+/* ===========================
+   Footer
+   =========================== */
+
+footer {
+    text-align: center;
+    padding: 1rem;
+    margin-top: 2rem;
+    background: #2a4d2e;
+    color: white;
+}
