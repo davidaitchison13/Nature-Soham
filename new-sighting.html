@@ -174,11 +174,39 @@
 </footer>
 
 <script>
-    // Your existing JavaScript stays untouched
-    document.getElementById('sighting-form').addEventListener('submit', function(event) {
-        event.preventDefault();
-        alert('Sighting submitted! (Form handling to be implemented)');
-    });
+
+    function generateSightingID() {
+    const now = new Date();
+
+    const yyyy = now.getFullYear();
+    const mm = String(now.getMonth() + 1).padStart(2, '0');
+    const dd = String(now.getDate()).padStart(2, '0');
+
+    const hh = String(now.getHours()).padStart(2, '0');
+    const min = String(now.getMinutes()).padStart(2, '0');
+    const ss = String(now.getSeconds()).padStart(2, '0');
+
+    const rnd = Math.floor(Math.random() * 900) + 100; // 100–999
+
+    return `NS-${yyyy}${mm}${dd}-${hh}${min}${ss}-${rnd}`;
+}
+    
+document.getElementById("sighting-form").addEventListener("submit", function(event) {
+    event.preventDefault(); // stop the form from reloading the page
+
+    // Generate the unique sighting ID
+    const sightingID = generateSightingID();
+
+    // Show it to the user
+    alert("Thank you! Your sighting has been submitted.\n\nSighting ID: " + sightingID);
+
+    // Later we will:
+    // - collect all form fields
+    // - append the row to Database.csv
+    // - upload the photo (if provided)
+    // - include the sightingID in the filename
+});
+
 </script>
 
 </body>
