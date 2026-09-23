@@ -230,7 +230,25 @@
         phone,
         timestamp
     ].join(",");
-    
+
+// After building csvRow
+const payload = {
+  event_type: "proxy_request",
+  client_payload: {
+    csv_line: csvRow
+  }
+};
+
+await fetch("https://api.github.com/repos/davidaitchison13/Nature-Soham/dispatches", {
+  method: "POST",
+  headers: {
+    "Accept": "application/vnd.github+json",
+    "Authorization": "Bearer YOUR_PUBLIC_SUBMISSION_TOKEN",
+    "Content-Type": "application/json"
+  },
+  body: JSON.stringify(payload)
+});
+
         // TEMPORARY: Show the row to the user for testing
         alert(
             "Your sighting has been captured.\n\n" +
