@@ -173,12 +173,18 @@ main {
 /* ===========================
    Privacy Content Area
    =========================== */
+
 .privacy-section {
     text-align: left;
     width: 90%;
     max-width: 900px;
     margin: 0 auto;
     line-height: 1.6;
+}
+/* Left-align headings inside the Privacy page */
+.privacy-section h1,
+.privacy-section h2 {
+    text-align: left;
 }
 
 /* ===========================
