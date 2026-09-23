@@ -179,34 +179,68 @@
 
     function generateSightingID() {
     const now = new Date();
-
     const yyyy = now.getFullYear();
     const mm = String(now.getMonth() + 1).padStart(2, '0');
     const dd = String(now.getDate()).padStart(2, '0');
-
     const hh = String(now.getHours()).padStart(2, '0');
     const min = String(now.getMinutes()).padStart(2, '0');
     const ss = String(now.getSeconds()).padStart(2, '0');
-
     const rnd = Math.floor(Math.random() * 900) + 100; // 100–999
-
     return `NS-${yyyy}${mm}${dd}-${hh}${min}${ss}-${rnd}`;
 }
     
-document.getElementById("sighting-form").addEventListener("submit", function(event) {
+    document.getElementById("sighting-form").addEventListener("submit", function(event) {
     event.preventDefault(); // stop the form from reloading the page
 
     // Generate the unique sighting ID
     const sightingID = generateSightingID();
+    const timestamp = new Date().toISOString();
 
-    // Show it to the user
-    alert("Thank you! Your sighting has been submitted.\n\nSighting ID: " + sightingID);
+    // Collect all form fields
+    const specimenType = document.getElementById("specimen").value;
+    const species = document.getElementById("species").value;
+    const location = document.getElementById("location").value;
+    const description = document.getElementById("description").value;
+    const date = document.getElementById("date").value;
+    const timeOfDay = document.getElementById("time").value;
+    const count = document.getElementById("count").value;
+    const weather = document.getElementById("weather").value;
+    // Photo filename (if uploaded)
+    const photoInput = document.getElementById("photo");
+    const photoFilename = photoInput.files.length > 0 ? photoInput.files[0].name : "";
+    // People Data
+    const observerName = document.getElementById("observer").value;
+    const email = document.getElementById("email").value;
+    const phone = document.getElementById("phone").value;
 
-    // Later we will:
-    // - collect all form fields
-    // - append the row to Database.csv
-    // - upload the photo (if provided)
-    // - include the sightingID in the filename
+    // Build CSV row in correct order
+    const csvRow = [
+        sightingID,
+        specimenType,
+        species,
+        location,
+        `"${description.replace(/"/g, '""')}"`,   // escape quotes
+        date,
+        timeOfDay,
+        count,
+        weather,
+        photoFilename,
+        observerName,
+        email,
+        phone,
+        timestamp
+    ].join(",");
+    
+        // TEMPORARY: Show the row to the user for testing
+        alert(
+            "Your sighting has been captured.\n\n" +
+            "CSV row:\n" + csvRow +
+            "\n\n(Next step: append this to Database.csv)"
+        );
+    // TODO:
+    // - Append csvRow to Database.csv using GitHub API
+    // - Upload photo (if present)
+    // - Clear form or redirect
 });
 
 </script>
