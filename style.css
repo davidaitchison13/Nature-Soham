@@ -99,16 +99,18 @@ body {
 }
 .home-icon {
     display: inline-block;
-    width: 12px;
-    height: 12px;
-    border-left: 2px solid #ffffff;
-    border-right: 2px solid #ffffff;
-    border-bottom: 2px solid #ffffff;
-    transform: rotate(45deg);
+    width: 18px;
+    height: 18px;
     margin-right: 6px;
-    position: relative;
-    top: 1px;
+    vertical-align: middle;
+    background-image: url("data:image/svg+xml;utf8,\
+        <svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='white'>\
+            <path d='M12 3l9 9h-3v9h-12v-9h-3z'/>\
+        </svg>");
+    background-size: contain;
+    background-repeat: no-repeat;
 }
+
 
 /* ===========================
    Navigation Bar
