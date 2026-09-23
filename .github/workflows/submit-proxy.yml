@@ -7,12 +7,13 @@ on:
 jobs:
   proxy:
     runs-on: ubuntu-latest
-
     steps:
-    - name: Forward request to append workflow
-      run: |
-        curl -X POST \
+      - name: Forward request to append workflow
+        env:
+          PAYLOAD: ${{ toJson(github.event.client_payload) }}
+        run: |
+          curl -X POST \
           -H "Accept: application/vnd.github+json" \
           -H "Authorization: Bearer ${{ secrets.SUBMISSION_TOKEN }}" \
           https://api.github.com/repos/davidaitchison13/Nature-Soham/dispatches \
-          -d "{\"event_type\":\"new_sighting\",\"client_payload\":${{ toJson(github.event.client_payload) }}}"
+          -d "{\"event_type\":\"new_sighting\",\"client_payload\":${PAYLOAD}}"
