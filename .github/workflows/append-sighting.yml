@@ -4,22 +4,30 @@ on:
   repository_dispatch:
     types: [new_sighting]
 
+permissions:
+  contents: write
+
 jobs:
   append:
     runs-on: ubuntu-latest
-
     steps:
-    - name: Checkout repo
-      uses: actions/checkout@v4
+      - name: Checkout repo
+        uses: actions/checkout@v4
 
-    - name: Append sighting row
-      run: |
-        echo "${{ github.event.client_payload.csv_line }}" >> Database.csv
+      - name: Append sighting row
+        run: |
+          if [ -z "${{ github.event.client_payload.csv_line }}" ]; then
+            echo "No CSV line provided — aborting."
+            exit 1
+          fi
+          echo "${{ github.event.client_payload.csv_line }}" >> Database.csv
 
-    - name: Commit changes
-      run: |
-        git config user.name "Nature-Soham Bot"
-        git config user.email "actions@github.com"
-        git add Database.csv
-        git commit -m "Add new sighting"
-        git push
+      - name: Commit changes
+        env:
+          TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          git config user.name "Nature-Soham Bot"
+          git config user.email "actions@github.com"
+          git add Database.csv
+          git commit -m "Add new sighting"
+          git push https://x-access-token:${TOKEN}@github.com/davidaitchison13/Nature-Soham.git HEAD:main
