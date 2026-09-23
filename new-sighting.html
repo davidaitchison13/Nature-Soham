@@ -189,7 +189,7 @@
     return `NS-${yyyy}${mm}${dd}-${hh}${min}${ss}-${rnd}`;
 }
     
-    document.getElementById("sighting-form").addEventListener("submit", function(event) {
+    document.getElementById("sighting-form").addEventListener("submit", async function(event) {
     event.preventDefault(); // stop the form from reloading the page
 
     // Generate the unique sighting ID
