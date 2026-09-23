@@ -350,8 +350,24 @@ form {
     color: var(--forest-green);
 }
 
-
 .site-footer a:hover {
     color: white;
 }
 
+/* ===========================
+   Privacy Page Layout
+   =========================== */
+
+.privacy-section {
+    text-align: left;          /* Left‑justify all text */
+    width: 90%;                /* Keep content neatly contained */
+    max-width: 900px;          /* Prevent overly wide lines */
+    margin: 0 auto;            /* Centre the block itself */
+    line-height: 1.6;          /* Improve readability */
+}
+
+/* Left-align headings inside the Privacy page */
+.privacy-section h1,
+.privacy-section h2 {
+    text-align: left;
+}
