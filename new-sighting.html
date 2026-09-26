@@ -239,19 +239,22 @@ const payload = {
   }
 };
 
-await fetch("https://api.github.com/repos/davidaitchison13/Nature-Soham/dispatches", {
-  method: "POST",
-  headers: {
-    "Accept": "application/vnd.github+json",
-    "Content-Type": "application/json"
-  },
-  body: JSON.stringify({
-    event_type: "public_submit",
-    client_payload: {
-      csv_line: csvRow
-    }
-  })
-});
+await fetch(
+  "https://api.github.com/repos/davidaitchison13/Nature-Soham/actions/workflows/public-submit.yml/dispatches",
+  {
+    method: "POST",
+    headers: {
+      "Accept": "application/vnd.github+json",
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({
+      ref: "main",
+      inputs: {
+        csv_line: csvRow
+      }
+    })
+  }
+);
 
         // TEMPORARY: Show the row to the user for testing
         alert(
