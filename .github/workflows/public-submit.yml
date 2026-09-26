@@ -1,0 +1,25 @@
+name: Public submission endpoint
+
+on:
+  workflow_dispatch:
+  repository_dispatch:
+    types: [public_submit]
+
+permissions:
+  contents: read
+
+jobs:
+  receive:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Forward payload to append workflow
+        env:
+          TOKEN: ${{ secrets.SUBMISSION_TOKEN }}
+          PAYLOAD: ${{ toJson(github.event.client_payload) }}
+        run: |
+          curl -X POST \
+            -H "Accept: application/vnd.github+json" \
+            -H "Authorization: Bearer ${TOKEN}" \
+            https://api.github.com/repos/${GITHUB_REPOSITORY}/dispatches \
+            -d "{\"event_type\":\"new_sighting\",\"client_payload\":${PAYLOAD}}"
