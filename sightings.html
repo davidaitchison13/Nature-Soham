@@ -144,6 +144,14 @@
         .results-table th .sort-header:focus-visible {
             text-decoration: underline;
         }
+        .results-table th[aria-sort="ascending"] .sort-header::after {
+            content: " ▲";
+        }
+
+        .results-table th[aria-sort="descending"] .sort-header::after {
+            content: " ▼";
+        }
+        
         .results-table td {
             padding: 0.7rem;
             border-bottom: 1px solid #d7dfd4;
@@ -340,6 +348,7 @@
     const loadError = document.getElementById("load-error");
     let sightings = [];
     let displayedSightings = [];
+    let headerSort = null;
 
     function parseCsv(text) {
         const rows = [];
@@ -463,12 +472,49 @@
                 (!toDate || item.Date <= toDate);
         });
 
-        matches.sort((a, b) => {
-            if (sort === "species") return String(a.Species).localeCompare(String(b.Species), undefined, { sensitivity: "base" });
-            const dateOrder = String(a.Date).localeCompare(String(b.Date));
-            return sort === "oldest" ? dateOrder : -dateOrder;
-        });
-        displayedSightings = matches;
+        if (headerSort) {
+            const { key, direction } = headerSort;
+
+            matches.sort((a, b) => {
+                const left = String(a[key] ?? "").trim();
+                const right = String(b[key] ?? "").trim();
+
+                if (!left && !right) return 0;
+                if (!left) return 1;
+                if (!right) return -1;
+
+                let comparison;
+
+                if (key === "Count") {
+                    const countValue = value =>
+                        value.toLowerCase() === "more than 10" ? 11 : Number(value);
+                    comparison = countValue(left) - countValue(right);
+                } else if (key === "TimeOfDay") {
+                    const timeOrder = ["Dawn", "Morning", "Afternoon", "Dusk", "Night"];
+                    comparison = timeOrder.indexOf(left) - timeOrder.indexOf(right);
+                } else {
+                    comparison = left.localeCompare(right, undefined, {
+                        numeric: true,
+                        sensitivity: "base"
+                    });
+                }
+
+                return direction * comparison;
+            });
+        } else {
+            matches.sort((a, b) => {
+                if (sort === "species") {
+                    return String(a.Species).localeCompare(
+                        String(b.Species),
+                        undefined,
+                        { sensitivity: "base" }
+                    );
+                }
+
+                const dateOrder = String(a.Date).localeCompare(String(b.Date));
+                return sort === "oldest" ? dateOrder : -dateOrder;
+            });
+        }        displayedSightings = matches;
         resultsBody.replaceChildren();
         if (matches.length === 0) {
             const tr = document.createElement("tr");
@@ -555,6 +601,38 @@
         window.setTimeout(filterAndRender, 0);
     });
     document.getElementById("refresh-data").addEventListener("click", loadDatabase);
+        document.querySelectorAll(".sort-header").forEach(button => {
+        button.addEventListener("click", () => {
+            const key = button.dataset.sortKey;
+
+            if (headerSort && headerSort.key === key) {
+                headerSort.direction *= -1;
+            } else {
+                headerSort = { key, direction: 1 };
+            }
+
+            document.querySelectorAll(".results-table th").forEach(heading => {
+                heading.removeAttribute("aria-sort");
+            });
+
+            button.closest("th").setAttribute(
+                "aria-sort",
+                headerSort.direction === 1 ? "ascending" : "descending"
+            );
+
+            filterAndRender();
+        });
+    });
+
+    document.getElementById("sort-order").addEventListener("change", () => {
+        headerSort = null;
+
+        document.querySelectorAll(".results-table th").forEach(heading => {
+            heading.removeAttribute("aria-sort");
+        });
+
+        filterAndRender();
+    });
     document.getElementById("export-results").addEventListener("click", exportResultsAsCsv);
     loadDatabase();
 })();
