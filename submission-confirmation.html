@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Confirmation that your wildlife sighting has been received.">
+    <link rel="icon" type="image/svg+xml" href="assets/images/favicon.svg">
+    <title>Sighting Received – Nature Soham</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        main.confirmation-page {
+            width: min(900px, calc(100% - 2rem));
+            box-sizing: border-box;
+            text-align: left;
+        }
+
+        .confirmation-card {
+            margin: 1.5rem 0;
+            padding: 1.5rem;
+            background: #fff;
+            border: 1px solid #d7dfd4;
+            border-left: 5px solid var(--moss-green);
+            border-radius: 8px;
+        }
+
+        .confirmation-card h2 {
+            margin-top: 0;
+            color: var(--forest-green);
+        }
+
+        .submission-summary {
+            display: grid;
+            grid-template-columns: minmax(140px, 1fr) 3fr;
+            gap: 0.65rem 1rem;
+            margin: 1.25rem 0;
+        }
+
+        .submission-summary dt {
+            font-weight: bold;
+            color: var(--forest-green);
+        }
+
+        .submission-summary dd {
+            margin: 0;
+            overflow-wrap: anywhere;
+            white-space: pre-wrap;
+        }
+
+        .confirmation-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.75rem;
+            margin-top: 1.25rem;
+        }
+
+        .confirmation-actions a {
+            display: inline-block;
+            padding: 0.7rem 1rem;
+            border-radius: 6px;
+            background: var(--moss-green);
+            color: white;
+            font-weight: bold;
+            text-decoration: none;
+        }
+
+        .confirmation-actions a:hover {
+            background: var(--forest-green);
+        }
+
+        #missing-details {
+            border-left-color: #a33a2a;
+        }
+
+        @media (max-width: 600px) {
+            main.confirmation-page {
+                width: calc(100% - 1rem);
+                padding: 0.5rem;
+            }
+
+            .submission-summary {
+                grid-template-columns: 1fr;
+                gap: 0.2rem;
+            }
+
+            .submission-summary dd {
+                margin-bottom: 0.7rem;
+            }
+        }
+    </style>
+</head>
+<body>
+<header class="site-header">
+    <a href="index.html" class="logo-link">
+        <img src="assets/images/nature-soham-logo-trimmed-white.png"
+             alt="Nature Soham Wildlife Logo"
+             class="site-logo">
+    </a>
+</header>
+
+<nav class="main-nav" aria-label="Main navigation">
+    <ul>
+        <li><a href="index.html"><span class="home-icon"></span> Home</a></li>
+        <li><a href="new-sighting.html">Submit a New Sighting</a></li>
+        <li><a href="sightings.html">Query the Sightings Database</a></li>
+    </ul>
+</nav>
+
+<main class="confirmation-page">
+    <h1>Sighting submission</h1>
+
+    <section id="confirmation" class="confirmation-card" hidden>
+        <h2>Your sighting has been received</h2>
+        <p>Your submission is being processed. It may take a short time to appear in the public sightings database.</p>
+        <p>Here is a summary of the sighting details you submitted:</p>
+        <dl id="submission-summary" class="submission-summary"></dl>
+        <p>Your email address and phone number are not shown here.</p>
+        <div class="confirmation-actions">
+            <a href="new-sighting.html">Submit another sighting</a>
+            <a href="sightings.html">View the sightings database</a>
+        </div>
+    </section>
+
+    <section id="missing-details" class="confirmation-card" hidden>
+        <h2>Submission details unavailable</h2>
+        <p>We could not find the details for a recent submission in this browser. If you have just submitted a sighting, please return to the form and try again.</p>
+        <div class="confirmation-actions">
+            <a href="new-sighting.html">Return to the sighting form</a>
+        </div>
+    </section>
+</main>
+
+<footer class="site-footer">
+    <p>© 2026 Nature Soham · Community Wildlife Project</p>
+    <p>
+        <a href="contact.html">Contact the Website Owner</a> |
+        <a href="privacy.html">Privacy Policy</a> |
+        <a href="report.html">Report a Problem</a>
+    </p>
+</footer>
+
+<script>
+(() => {
+    "use strict";
+
+    const storageKey = "natureSohamSubmissionSummary";
+    const confirmation = document.getElementById("confirmation");
+    const missingDetails = document.getElementById("missing-details");
+    const summary = document.getElementById("submission-summary");
+    const labels = [
+        ["Specimen type", "specimenType"],
+        ["Species", "species"],
+        ["Location", "location"],
+        ["Description", "description"],
+        ["Date", "date"],
+        ["Time of day", "timeOfDay"],
+        ["Count", "count"],
+        ["Weather", "weather"],
+        ["Observer", "observerName"]
+    ];
+
+    try {
+        const saved = sessionStorage.getItem(storageKey);
+        const details = saved ? JSON.parse(saved) : null;
+        if (!details || typeof details !== "object") {
+            throw new Error("No saved submission summary");
+        }
+
+        for (const [label, key] of labels) {
+            const term = document.createElement("dt");
+            term.textContent = label;
+
+            const description = document.createElement("dd");
+            description.textContent = details[key] || "—";
+
+            summary.append(term, description);
+        }
+
+        sessionStorage.removeItem(storageKey);
+        confirmation.hidden = false;
+    } catch {
+        sessionStorage.removeItem(storageKey);
+        missingDetails.hidden = false;
+    }
+})();
+</script>
+</body>
+</html>
