@@ -118,23 +118,32 @@
             text-align: left;
         }
 
-        .results-table th,
+        .results-table th {
+            padding: 0.7rem;
+            vertical-align: middle;
+        }
         .results-table th .sort-header {
+            display: block;
+            width: 100%;
+            min-height: 1.5em;
+            margin: 0;
             padding: 0;
             border: 0;
             border-radius: 0;
             background: transparent;
             color: inherit;
-            font: inherit;
-            text-align: inherit;
+            font-family: inherit;
+            font-size: inherit;
+            font-weight: bold;
+            line-height: 1.4;
+            text-align: left;
             white-space: nowrap;
             cursor: pointer;
         }
-
-.results-table th .sort-header:hover,
-.results-table th .sort-header:focus-visible {
-    text-decoration: underline;
-}
+        .results-table th .sort-header:hover,
+        .results-table th .sort-header:focus-visible {
+            text-decoration: underline;
+        }
         .results-table td {
             padding: 0.7rem;
             border-bottom: 1px solid #d7dfd4;
