@@ -458,7 +458,41 @@
         }
         resultsSummary.textContent = `Showing ${matches.length} of ${sightings.length} sighting${sightings.length === 1 ? "" : "s"}.`;
     }
+    function exportResultsAsCsv() {
+        const columns = [
+            ["Sighting ID", "SightingID"],
+            ["Type", "SpecimenType"],
+            ["Species", "Species"],
+            ["Location", "Location"],
+            ["Description", "Description"],
+            ["Date", "Date"],
+            ["Time", "TimeOfDay"],
+            ["Count", "Count"],
+            ["Weather", "Weather"],
+            ["Observer", "ObserverName"]
+        ];
 
+        const escapeCsv = value =>
+            `"${String(value ?? "").replace(/"/g, '""')}"`;
+
+        const rows = [
+            columns.map(([heading]) => escapeCsv(heading)),
+            ...displayedSightings.map(sighting =>
+                columns.map(([, key]) => escapeCsv(sighting[key] || "—"))
+            )
+        ];
+
+        const csv = "\uFEFF" + rows.map(row => row.join(",")).join("\r\n");
+        const blob = new Blob([csv], { type: "text/csv;charset=utf-8" });
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement("a");
+
+        link.href = url;
+        link.download = "nature-soham-sightings.csv";
+        link.click();
+
+        URL.revokeObjectURL(url);
+    }
     async function loadDatabase() {
         const refreshButton = document.getElementById("refresh-data");
         refreshButton.disabled = true;
