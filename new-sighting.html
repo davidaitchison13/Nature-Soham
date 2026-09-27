@@ -256,16 +256,6 @@ if (!result.success) {
     throw new Error(result.error || "Submission failed");
 }
 
-alert("Thank you! Your wildlife sighting has been submitted successfully.");
-        // TEMPORARY: Show the row to the user for testing
-        alert(
-            "Your sighting has been captured.\n\n" +
-            "CSV row:\n" + csvRow +
-            "\n\n(Next step: append this to Database.csv)"
-        );
-    // TODO:
-    // - Upload photo (if present)
-    // - Clear form or redirect
 });
 
 </script>
