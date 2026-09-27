@@ -443,7 +443,7 @@
             const dateOrder = String(a.Date).localeCompare(String(b.Date));
             return sort === "oldest" ? dateOrder : -dateOrder;
         });
-
+        displayedSightings = matches;
         resultsBody.replaceChildren();
         if (matches.length === 0) {
             const tr = document.createElement("tr");
