@@ -255,6 +255,7 @@
         <div class="query-actions">
             <button type="submit">Search</button>
             <button type="reset" class="secondary-button">Clear filters</button>
+            <button type="button" id="export-results">Export results as CSV</button>
             <button type="button" id="refresh-data">Refresh database</button>
         </div>
     </form>
@@ -313,6 +314,7 @@
     const resultsSummary = document.getElementById("results-summary");
     const loadError = document.getElementById("load-error");
     let sightings = [];
+    let displayedSightings = [];
 
     function parseCsv(text) {
         const rows = [];
