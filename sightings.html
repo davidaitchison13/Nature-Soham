@@ -274,7 +274,6 @@
                     <th scope="col">Time</th>
                     <th scope="col">Count</th>
                     <th scope="col">Weather</th>
-                    <th scope="col">Photo filename</th>
                     <th scope="col">Observer</th>
                 </tr>
             </thead>
@@ -303,7 +302,7 @@
         "Date", "TimeOfDay", "Count", "Weather", "PhotoFilename", "ObserverName"
     ];
     const FILTER_COLUMNS = {
-        keyword: ["SightingID", "SpecimenType", "Species", "Location", "Description", "Date", "TimeOfDay", "Count", "Weather", "PhotoFilename", "ObserverName"],
+        keyword: ["SightingID", "SpecimenType", "Species", "Location", "Description", "Date", "TimeOfDay", "Count", "Weather", "ObserverName"],
         specimen: "SpecimenType",
         weather: "Weather",
         time: "TimeOfDay"
@@ -410,7 +409,6 @@
             cell(sighting.TimeOfDay),
             cell(sighting.Count),
             cell(sighting.Weather),
-            cell(sighting.PhotoFilename),
             cell(sighting.ObserverName)
         );
         return tr;
