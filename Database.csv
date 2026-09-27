@@ -1,1 +1,2 @@
 SightingID,SpecimenType,Species,Location,Description,Date,TimeOfDay,Count,Weather,PhotoFilename,ObserverName,Email,Phone,SubmissionTimestamp
+TEST-001,Test Species,Test Location,This is a test submission,2026-09-27,09:00,1,Test Weather
