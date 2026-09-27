@@ -215,8 +215,23 @@ document.getElementById("sighting-form").addEventListener("submit", async functi
     if (!response.ok || !result.success) {
       throw new Error(result.error || "Your sighting could not be submitted. Please try again later.");
     }
-    alert("Thank you. Your sighting has been submitted.");
+    try {
+        sessionStorage.setItem("natureSohamSubmissionSummary", JSON.stringify({
+            specimenType: payload.specimenType,
+            species: payload.species,
+            location: payload.location,
+            description: payload.description,
+            date: payload.date,
+            timeOfDay: payload.timeOfDay,
+            count: payload.count,
+            weather: payload.weather,
+            observerName: payload.observerName
+        }));
+    window.location.href = "submission-confirmation.html";
+} catch {
+    alert("Your sighting has been received and is being processed, but the confirmation summary could not be shown.");
     form.reset();
+}
   } catch (error) {
     showSubmissionError(error.message);
   } finally {
