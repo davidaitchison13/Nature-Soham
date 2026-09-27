@@ -13,21 +13,36 @@ jobs:
     steps:
       - name: Checkout repo
         uses: actions/checkout@v4
-
-      - name: Append sighting row
-        run: |
-          if [ -z "${{ github.event.client_payload.csv_line }}" ]; then
-            echo "No CSV line provided — aborting."
-            exit 1
-          fi
-          echo "${{ github.event.client_payload.csv_line }}" >> Database.csv
-
-      - name: Commit changes
+      - name: Validate and append sighting row
         env:
-          TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          CSV_LINE: ${{ github.event.client_payload.csv_line }}
+        run: |
+          python3 - <<'PY'
+          import csv
+          import io
+          import os
+          from pathlib import Path
+
+          line = os.environ.get("CSV_LINE", "")
+          if not line or len(line) > 12000 or "\n" in line or "\r" in line:
+              raise SystemExit("Missing or invalid sighting row")
+
+          try:
+              row = next(csv.reader(io.StringIO(line, newline=""), strict=True))
+          except (csv.Error, StopIteration) as exc:
+              raise SystemExit("Malformed CSV sighting row") from exc
+
+          if len(row) != 14 or any(len(value) > 2000 for value in row):
+              raise SystemExit("Sighting row has an invalid number of fields or field length")
+
+          database = Path("Database.csv")
+          with database.open("a", encoding="utf-8", newline="") as output:
+              csv.writer(output, lineterminator="\n").writerow(row)
+          PY
+      - name: Commit changes
         run: |
           git config user.name "Nature-Soham Bot"
           git config user.email "actions@github.com"
           git add Database.csv
-          git commit -m "Add new sighting"
-          git push https://x-access-token:${TOKEN}@github.com/davidaitchison13/Nature-Soham.git HEAD:main
+          git diff --cached --quiet || git commit -m "Add new sighting"
+          git push
