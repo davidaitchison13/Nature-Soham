@@ -119,6 +119,22 @@
         }
 
         .results-table th,
+        .results-table th .sort-header {
+            padding: 0;
+            border: 0;
+            border-radius: 0;
+            background: transparent;
+            color: inherit;
+            font: inherit;
+            text-align: inherit;
+            white-space: nowrap;
+            cursor: pointer;
+        }
+
+.results-table th .sort-header:hover,
+.results-table th .sort-header:focus-visible {
+    text-decoration: underline;
+}
         .results-table td {
             padding: 0.7rem;
             border-bottom: 1px solid #d7dfd4;
@@ -266,16 +282,16 @@
         <table class="results-table">
             <thead>
                 <tr>
-                    <th scope="col">Sighting ID</th>
-                    <th scope="col">Type</th>
-                    <th scope="col">Species</th>
-                    <th scope="col">Location</th>
-                    <th scope="col">Description</th>
-                    <th scope="col">Date</th>
-                    <th scope="col">Time</th>
-                    <th scope="col">Count</th>
-                    <th scope="col">Weather</th>
-                    <th scope="col">Observer</th>
+                    <th scope="col"><button type="button" class="sort-header" data-sort-key="SightingID">Sighting ID</button></th>
+                    <th scope="col"><button type="button" class="sort-header" data-sort-key="SpecimenType">Type</button></th>
+                    <th scope="col"><button type="button" class="sort-header" data-sort-key="Species">Species</button></th>
+                    <th scope="col"><button type="button" class="sort-header" data-sort-key="Location">Location</button></th>
+                    <th scope="col"><button type="button" class="sort-header" data-sort-key="Description">Description</button></th>
+                    <th scope="col"><button type="button" class="sort-header" data-sort-key="Date">Date</button></th>
+                    <th scope="col"><button type="button" class="sort-header" data-sort-key="TimeOfDay">Time</button></th>
+                    <th scope="col"><button type="button" class="sort-header" data-sort-key="Count">Count</button></th>
+                    <th scope="col"><button type="button" class="sort-header" data-sort-key="Weather">Weather</button></th>
+                    <th scope="col"><button type="button" class="sort-header" data-sort-key="ObserverName">Observer</button></th>
                 </tr>
             </thead>
             <tbody id="results-body">
