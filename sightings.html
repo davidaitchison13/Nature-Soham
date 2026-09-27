@@ -37,24 +37,26 @@
             border-radius: 8px;
             text-align: left;
         }
-
+        
+        main.sightings-page form#query-form.query-panel {
+            width: 100%;
+            max-width: none;
+        }
+        
         .query-grid {
             display: grid;
             grid-template-columns: repeat(4, minmax(0, 1fr));
             gap: 1rem;
         }
-
         .query-field {
             display: flex;
             flex-direction: column;
             gap: 0.35rem;
         }
-
         .query-field label {
             color: var(--forest-green);
             font-weight: bold;
         }
-
         .query-field input,
         .query-field select {
             box-sizing: border-box;
@@ -67,29 +69,24 @@
             color: var(--text-dark);
             font: inherit;
         }
-
         .query-actions {
             display: flex;
             flex-wrap: wrap;
             gap: 0.75rem;
             margin-top: 1rem;
         }
-
         .query-actions button {
             min-height: 2.7rem;
             font: inherit;
             font-weight: bold;
         }
-
         .query-actions .secondary-button {
             background: var(--earth-brown);
         }
-
         .query-actions .secondary-button:hover {
             background: var(--gold-accent);
             color: var(--forest-green);
         }
-
         .query-actions button:focus-visible,
         .query-field input:focus-visible,
         .query-field select:focus-visible {
