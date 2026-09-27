@@ -1,2 +1,12 @@
 SightingID,SpecimenType,Species,Location,Description,Date,TimeOfDay,Count,Weather,PhotoFilename,ObserverName,Email,Phone,SubmissionTimestamp
 NS-20260927104020-9F05C81F,Arachnid,Spidey,In the pond,This is an encrypted Test,2026-09-25,Morning,More than 10,Drizzle,,Dave,enc:v1:wrkVU6KU8UojyxAF0WEqo9Tp211J69w0BAqgwLE9TAtKx05X7nHcJzFu2R28MK7H/S8=,enc:v1:P5U9NsLbZZzrJNNIkHOxdtBs661WrusoPyyX85aWTIwFZFwOhyJ/jA==,2026-09-27T10:40:20.902Z
+"NS-TEST-001","Bird","Blackbird","Soham Abbey Gardens","A blackbird was feeding on the lawn.","2025-04-12","Morning","2","Sunny","","Alex Test","","","2025-04-12T09:15:00.000Z"
+"NS-TEST-002","Mammal","Hedgehog","Jubilee Field","Seen moving along the hedge at dusk.","2025-05-03","Dusk","1","Mild","","Sam Example","","","2025-05-03T20:10:00.000Z"
+"NS-TEST-003","Insect","Red admiral butterfly","Churchyard","Resting on ivy beside the path.","2025-06-18","Afternoon","3","Warm","","Jamie Sample","","","2025-06-18T14:30:00.000Z"
+"NS-TEST-004","Amphibian","Common frog","Near the pond","Small frog beside the water after light rain.","2025-03-22","Morning","1","Light rain","","Taylor Test","","","2025-03-22T08:05:00.000Z"
+"NS-TEST-005","Arachnid","Garden spider","Back garden","Large web between two plants.","2025-08-09","Dawn","1","Misty","","Morgan Example","","","2025-08-09T06:20:00.000Z"
+"NS-TEST-006","Plant","Common poppy","Field edge, Soham","Several bright red flowers beside the footpath.","2025-06-02","Afternoon","More than 10","Dry","","Casey Sample","","","2025-06-02T15:45:00.000Z"
+"NS-TEST-007","Fish","Common roach","Riverbank","Fish visible near the surface by the bank.","2025-07-11","Dusk","4","Overcast","","Robin Test","","","2025-07-11T19:05:00.000Z"
+"NS-TEST-008","Reptile","Grass snake","Meadow path","A grass snake crossed the path and disappeared into long grass.","2025-07-26","Afternoon","1","Sunny","","Jordan Example","","","2025-07-26T13:40:00.000Z"
+"NS-TEST-009","Fungi","Fly agaric","Woodland edge","Red mushroom with white spots beneath the birch trees.","2025-10-05","Morning","2","Cool","","Riley Sample","","","2025-10-05T10:25:00.000Z"
+"NS-TEST-010","Other","Unidentified animal tracks","Muddy path","A line of small tracks in the mud after overnight rain.","2025-11-14","Morning","1","Wet","","Avery Test","","","2025-11-14T09:50:00.000Z"
