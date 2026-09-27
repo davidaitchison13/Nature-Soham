@@ -2,7 +2,7 @@ name: Append new sighting to CSV
 
 on:
   repository_dispatch:
-    types: [new_sighting]
+    types: [new_sighting_private_v1]
 
 permissions:
   contents: write
@@ -11,38 +11,52 @@ jobs:
   append:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout repo
+      - name: Check out repository
         uses: actions/checkout@v4
+
       - name: Validate and append sighting row
         env:
           CSV_LINE: ${{ github.event.client_payload.csv_line }}
         run: |
           python3 - <<'PY'
           import csv
-          import io
           import os
+          import sys
           from pathlib import Path
 
-          line = os.environ.get("CSV_LINE", "")
-          if not line or len(line) > 12000 or "\n" in line or "\r" in line:
-              raise SystemExit("Missing or invalid sighting row")
+          csv_path = Path("Database.csv")
+          csv_line = os.environ.get("CSV_LINE", "")
+          if not csv_line or len(csv_line.encode("utf-8")) > 12000:
+              sys.exit("Missing or oversized CSV row")
 
           try:
-              row = next(csv.reader(io.StringIO(line, newline=""), strict=True))
-          except (csv.Error, StopIteration) as exc:
-              raise SystemExit("Malformed CSV sighting row") from exc
+              parsed = list(csv.reader([csv_line], strict=True))
+          except csv.Error:
+              sys.exit("Invalid CSV row")
 
-          if len(row) != 14 or any(len(value) > 2000 for value in row):
-              raise SystemExit("Sighting row has an invalid number of fields or field length")
+          if len(parsed) != 1:
+              sys.exit("Expected exactly one CSV row")
+          row = parsed[0]
 
-          database = Path("Database.csv")
-          with database.open("a", encoding="utf-8", newline="") as output:
-              csv.writer(output, lineterminator="\n").writerow(row)
+          if not csv_path.exists():
+              sys.exit("Database.csv was not found")
+          with csv_path.open("r", encoding="utf-8-sig", newline="") as file:
+              header = next(csv.reader(file, strict=True), None)
+          if not header or len(row) != len(header):
+              sys.exit("CSV row does not match the Database.csv columns")
+
+          with csv_path.open("a", encoding="utf-8", newline="") as file:
+              csv.writer(file, lineterminator="\n").writerow(row)
           PY
+
       - name: Commit changes
         run: |
           git config user.name "Nature-Soham Bot"
           git config user.email "actions@github.com"
           git add Database.csv
-          git diff --cached --quiet || git commit -m "Add new sighting"
+          if git diff --cached --quiet; then
+            echo "No changes to commit"
+            exit 0
+          fi
+          git commit -m "Add new sighting"
           git push
