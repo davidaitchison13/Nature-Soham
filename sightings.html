@@ -587,6 +587,22 @@
             showDetailMap(coordinates.latitude, coordinates.longitude);
         }
     }
+        document.getElementById("sighting-detail-close").addEventListener(
+        "click",
+        () => detailDialog.close()
+    );
+
+    detailDialog.addEventListener("close", () => {
+        if (detailMapInstance) {
+            detailMapInstance.remove();
+            detailMapInstance = null;
+            detailMarker = null;
+        }
+
+        if (detailTrigger?.isConnected) {
+            detailTrigger.focus();
+        }
+    });
     function parseCsv(text) {
         const rows = [];
         let row = [];
