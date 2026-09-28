@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="icon" type="image/svg+xml" href="assets/images/favicon.svg">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Explore browser geolocation for wildlife sightings around Soham.">
+    <title>Find My Location – Nature Soham</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .location-panel {
+            max-width: 680px;
+            margin: 2rem auto;
+            padding: 1.5rem;
+            background: #fff;
+            border: 2px solid var(--moss-green);
+            border-radius: 10px;
+            text-align: left;
+            line-height: 1.6;
+        }
+        .location-panel h2 { color: var(--forest-green); margin-top: 0; }
+        .location-panel button { font-size: 1rem; }
+        .location-status { min-height: 1.6em; color: var(--forest-green); font-weight: bold; }
+        .coordinate-list { display: grid; grid-template-columns: max-content 1fr; gap: .4rem 1rem; margin: 1rem 0; }
+        .coordinate-list dt { font-weight: bold; color: var(--forest-green); }
+        .coordinate-list dd { margin: 0; font-variant-numeric: tabular-nums; overflow-wrap: anywhere; }
+        .location-actions { display: flex; flex-wrap: wrap; gap: .75rem; align-items: center; }
+        .location-actions a { color: var(--forest-green); font-weight: bold; }
+        .privacy-note { border-left: 4px solid var(--gold-accent); padding-left: 1rem; color: #444; }
+        [hidden] { display: none !important; }
+        @media (max-width: 600px) {
+            .main-nav ul { flex-wrap: wrap; justify-content: center; padding: 0 .75rem; }
+            .main-nav a { font-size: .95rem; }
+            .location-panel { margin: 1rem auto; padding: 1rem; }
+            .coordinate-list { grid-template-columns: 1fr; gap: .1rem; }
+            .coordinate-list dd { margin-bottom: .5rem; }
+        }
+    </style>
+</head>
+<body>
+<header class="site-header">
+    <a href="index.html" class="logo-link">
+        <img src="assets/images/nature-soham-logo-trimmed-white.png"
+             alt="Nature Soham Wildlife Logo"
+             class="site-logo">
+    </a>
+</header>
+<nav class="main-nav" aria-label="Main navigation">
+    <ul>
+        <li><a href="index.html">Home</a></li>
+        <li><a href="new-sighting.html">Submit a New Sighting</a></li>
+        <li><a href="sightings.html">Browse the Sightings Database</a></li>
+    </ul>
+</nav>
+<main>
+    <h1>Find My Location</h1>
+    <p>Use your device’s location to help identify where you spotted wildlife around Soham.</p>
+
+    <section class="location-panel" aria-labelledby="location-heading">
+        <h2 id="location-heading">Your location</h2>
+        <p>Choose the button below to ask your browser for your current location. Your browser may ask you to allow access.</p>
+        <div class="location-actions">
+            <button id="locate-button" type="button">Use my current location</button>
+            <button id="copy-button" type="button" hidden>Copy coordinates</button>
+            <a id="map-link" href="#" target="_blank" rel="noopener noreferrer" hidden>View on OpenStreetMap</a>
+        </div>
+        <p id="location-status" class="location-status" role="status" aria-live="polite">Location has not been requested.</p>
+        <dl id="location-result" class="coordinate-list" hidden>
+            <dt>Latitude</dt><dd id="latitude"></dd>
+            <dt>Longitude</dt><dd id="longitude"></dd>
+            <dt>Accuracy</dt><dd id="accuracy"></dd>
+            <dt>Updated</dt><dd id="updated"></dd>
+        </dl>
+        <p class="privacy-note"><strong>Privacy:</strong> Location is requested only when you press the button. This page displays the result in your browser and does not save or send it. If you choose to open the map, the coordinates are included in a request to OpenStreetMap.</p>
+    </section>
+</main>
+<footer class="site-footer">
+    <p>© 2026 Nature Soham · Community Wildlife Project</p>
+    <p>
+        <a href="contact.html">Contact the Website Owner</a> |
+        <a href="privacy.html">Privacy Policy</a> |
+        <a href="report.html">Report a Problem</a>
+    </p>
+</footer>
+<script>
+(() => {
+    const locateButton = document.getElementById('locate-button');
+    const copyButton = document.getElementById('copy-button');
+    const status = document.getElementById('location-status');
+    const result = document.getElementById('location-result');
+    const mapLink = document.getElementById('map-link');
+    let coordinates = null;
+
+    function showError(error) {
+        const messages = {
+            1: 'Location access was denied. You can allow it in your browser settings and try again.',
+            2: 'Your location is unavailable right now. Check your device location settings and try again.',
+            3: 'The location request timed out. Please try again.'
+        };
+        status.textContent = messages[error.code] || 'We could not get your location. Please try again.';
+        locateButton.disabled = false;
+        locateButton.textContent = 'Try again';
+    }
+
+    function showPosition(position) {
+        const { latitude, longitude, accuracy } = position.coords;
+        coordinates = `${latitude.toFixed(6)}, ${longitude.toFixed(6)}`;
+        document.getElementById('latitude').textContent = latitude.toFixed(6);
+        document.getElementById('longitude').textContent = longitude.toFixed(6);
+        document.getElementById('accuracy').textContent = `Within about ${Math.round(accuracy)} metres`;
+        document.getElementById('updated').textContent = new Date(position.timestamp).toLocaleString();
+        mapLink.href = `https://www.openstreetmap.org/?mlat=${encodeURIComponent(latitude)}&mlon=${encodeURIComponent(longitude)}#map=16/${encodeURIComponent(latitude)}/${encodeURIComponent(longitude)}`;
+        result.hidden = false;
+        mapLink.hidden = false;
+        copyButton.hidden = false;
+        status.textContent = 'Location found. Review the coordinates before using them for a sighting.';
+        locateButton.disabled = false;
+        locateButton.textContent = 'Update my location';
+    }
+
+    locateButton.addEventListener('click', () => {
+        if (!('geolocation' in navigator)) {
+            status.textContent = 'This browser does not support location. You can still enter a place name on the sighting form.';
+            return;
+        }
+        status.textContent = 'Waiting for your device to provide a location…';
+        locateButton.disabled = true;
+        navigator.geolocation.getCurrentPosition(showPosition, showError, {
+            enableHighAccuracy: true,
+            timeout: 15000,
+            maximumAge: 0
+        });
+    });
+
+    copyButton.addEventListener('click', async () => {
+        if (!coordinates) return;
+        try {
+            await navigator.clipboard.writeText(coordinates);
+            status.textContent = 'Coordinates copied to your clipboard.';
+        } catch {
+            status.textContent = 'Could not copy automatically. Select and copy the latitude and longitude above.';
+        }
+    });
+})();
+</script>
+</body>
+</html>
