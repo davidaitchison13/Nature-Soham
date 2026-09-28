@@ -27,7 +27,7 @@
         .location-actions { display: flex; flex-wrap: wrap; gap: .75rem; align-items: center; }
         .location-actions a { color: var(--forest-green); font-weight: bold; }
         .privacy-note { border-left: 4px solid var(--gold-accent); padding-left: 1rem; color: #444; }
-        .map-frame { width: 100%; height: 320px; margin-top: 1rem; border: 1px solid var(--moss-green); border-radius: 6px; }
+        .map-frame { width: 100%; height: 320px; margin-top: 1rem; border: 1px solid var(--moss-green); border-radius: 6px; z-index: 0; }
         [hidden] { display: none !important; }
         @media (max-width: 600px) {
             .main-nav ul { flex-wrap: wrap; justify-content: center; padding: 0 .75rem; }
@@ -67,14 +67,14 @@
             <a id="map-link" href="#" target="_blank" rel="noopener noreferrer" hidden>View on OpenStreetMap</a>
         </div>
         <p id="location-status" class="location-status" role="status" aria-live="polite">Location has not been requested.</p>
-        <iframe id="location-frame" class="map-frame" title="Map of your current location" loading="lazy" referrerpolicy="no-referrer" hidden></iframe>
+        <div id="location-frame" class="map-frame" role="application" aria-label="Interactive map. Drag the marker or select a point on the map to adjust the location." hidden></div>
         <dl id="location-result" class="coordinate-list" hidden>
             <dt>Latitude</dt><dd id="latitude"></dd>
             <dt>Longitude</dt><dd id="longitude"></dd>
             <dt>Accuracy</dt><dd id="accuracy"></dd>
             <dt>Updated</dt><dd id="updated"></dd>
         </dl>
-        <p class="privacy-note"><strong>Privacy:</strong> Location is requested only when you press the button. This page displays the result in your browser and does not save or send it. The map is not loaded until you choose “View in Frame” or “View on OpenStreetMap”; either choice sends the coordinates to OpenStreetMap to display the map.</p>
+        <p class="privacy-note"><strong>Privacy:</strong> Location is requested only when you press the button. This page does not save it. The map loads only when you choose “View in Frame” and sends map requests, including your approximate map area and your browser’s IP address, to OpenStreetMap. Choosing “View on OpenStreetMap” also sends the coordinates to that service.</p>
     </section>
 </main>
 <footer class="site-footer">
@@ -95,6 +95,9 @@
     const frameButton = document.getElementById('frame-button');
     const locationFrame = document.getElementById('location-frame');
     let coordinates = null;
+    let interactiveMap = null;
+    let marker = null;
+    let leafletLoadPromise = null;
 
     function showError(error) {
         const messages = {
@@ -109,13 +112,11 @@
 
     function showPosition(position) {
         const { latitude, longitude, accuracy } = position.coords;
-        coordinates = `${latitude.toFixed(6)}, ${longitude.toFixed(6)}`;
-        document.getElementById('latitude').textContent = latitude.toFixed(6);
-        document.getElementById('longitude').textContent = longitude.toFixed(6);
-        document.getElementById('accuracy').textContent = `Within about ${Math.round(accuracy)} metres`;
-        document.getElementById('updated').textContent = new Date(position.timestamp).toLocaleString();
-        mapLink.href = `https://www.openstreetmap.org/?mlat=${encodeURIComponent(latitude)}&mlon=${encodeURIComponent(longitude)}#map=16/${encodeURIComponent(latitude)}/${encodeURIComponent(longitude)}`;
-        if (!locationFrame.hidden) locationFrame.src = buildEmbedUrl(latitude, longitude);
+        updateCoordinates(latitude, longitude, `Within about ${Math.round(accuracy)} metres`, new Date(position.timestamp).toLocaleString());
+        if (marker) {
+            marker.setLatLng([latitude, longitude]);
+            interactiveMap.setView([latitude, longitude], 16);
+        }
         result.hidden = false;
         mapLink.hidden = false;
         copyButton.hidden = false;
@@ -125,19 +126,91 @@
         locateButton.textContent = 'Update my location';
     }
 
-    function buildEmbedUrl(latitude, longitude) {
-        const latitudePadding = 0.006;
-        const longitudePadding = 0.006 / Math.max(Math.cos(latitude * Math.PI / 180), 0.1);
-        const bounds = [
-            longitude - longitudePadding,
-            latitude - latitudePadding,
-            longitude + longitudePadding,
-            latitude + latitudePadding
-        ].map(value => value.toFixed(6)).join(',');
-        return `https://www.openstreetmap.org/export/embed.html?bbox=${encodeURIComponent(bounds)}&layer=mapnik&marker=${encodeURIComponent(latitude)},${encodeURIComponent(longitude)}`;
+    function updateCoordinates(latitude, longitude, accuracyText, updatedText) {
+        coordinates = `${latitude.toFixed(6)}, ${longitude.toFixed(6)}`;
+        document.getElementById('latitude').textContent = latitude.toFixed(6);
+        document.getElementById('longitude').textContent = longitude.toFixed(6);
+        document.getElementById('accuracy').textContent = accuracyText;
+        document.getElementById('updated').textContent = updatedText;
+        mapLink.href = `https://www.openstreetmap.org/?mlat=${encodeURIComponent(latitude)}&mlon=${encodeURIComponent(longitude)}#map=16/${encodeURIComponent(latitude)}/${encodeURIComponent(longitude)}`;
+        result.hidden = false;
+        mapLink.hidden = false;
+        copyButton.hidden = false;
+        frameButton.hidden = false;
     }
 
-    frameButton.addEventListener('click', () => {
+    function updateFromPin(latitude, longitude) {
+        updateCoordinates(latitude, longitude, 'Adjusted manually on the map; GPS accuracy does not apply.', 'Just now');
+        status.textContent = 'Coordinates updated from the map pin.';
+    }
+
+    function loadLeaflet() {
+        if (window.L) return Promise.resolve();
+        if (leafletLoadPromise) return leafletLoadPromise;
+
+        const resources = [
+            {
+                tag: 'link',
+                attributes: {
+                    rel: 'stylesheet',
+                    href: 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.css',
+                    integrity: 'sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY='
+                }
+            },
+            {
+                tag: 'script',
+                attributes: {
+                    src: 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.js',
+                    integrity: 'sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo='
+                }
+            }
+        ];
+        leafletLoadPromise = Promise.all(resources.map(resource => new Promise((resolve, reject) => {
+            const element = document.createElement(resource.tag);
+            Object.entries(resource.attributes).forEach(([name, value]) => element.setAttribute(name, value));
+            element.crossOrigin = 'anonymous';
+            element.onload = resolve;
+            element.onerror = reject;
+            document.head.appendChild(element);
+        }))).catch(error => {
+            leafletLoadPromise = null;
+            throw error;
+        });
+        return leafletLoadPromise;
+    }
+
+    async function showInteractiveMap(latitude, longitude) {
+        try {
+            await loadLeaflet();
+        } catch {
+            status.textContent = 'The interactive map could not load. Check your connection and try again.';
+            return false;
+        }
+
+        if (!interactiveMap) {
+            interactiveMap = L.map(locationFrame).setView([latitude, longitude], 16);
+            L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                maxZoom: 19,
+                attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap contributors</a>'
+            }).addTo(interactiveMap);
+            marker = L.marker([latitude, longitude], { draggable: true, autoPan: true }).addTo(interactiveMap);
+            marker.on('dragend', () => {
+                const point = marker.getLatLng();
+                updateFromPin(point.lat, point.lng);
+            });
+            interactiveMap.on('click', event => {
+                marker.setLatLng(event.latlng);
+                updateFromPin(event.latlng.lat, event.latlng.lng);
+            });
+        } else {
+            marker.setLatLng([latitude, longitude]);
+            interactiveMap.setView([latitude, longitude], 16);
+        }
+        requestAnimationFrame(() => interactiveMap.invalidateSize());
+        return true;
+    }
+
+    frameButton.addEventListener('click', async () => {
         if (!coordinates) return;
         const isOpening = locationFrame.hidden;
         locationFrame.hidden = !isOpening;
@@ -145,10 +218,20 @@
         frameButton.textContent = isOpening ? 'Hide Map' : 'View in Frame';
         if (isOpening) {
             const [latitude, longitude] = coordinates.split(', ').map(Number);
-            locationFrame.src = buildEmbedUrl(latitude, longitude);
-            status.textContent = 'Map displayed below. OpenStreetMap receives the coordinates to load it.';
+            frameButton.disabled = true;
+            if (!await showInteractiveMap(latitude, longitude)) {
+                locationFrame.hidden = true;
+                frameButton.setAttribute('aria-expanded', 'false');
+                frameButton.textContent = 'View in Frame';
+                frameButton.disabled = false;
+                return;
+            }
+            frameButton.disabled = false;
+            status.textContent = 'Drag the pin or click the map to adjust the coordinates. OpenStreetMap receives map requests while it is displayed.';
         } else {
-            locationFrame.removeAttribute('src');
+            if (interactiveMap) interactiveMap.remove();
+            interactiveMap = null;
+            marker = null;
             status.textContent = 'Map hidden.';
         }
     });
