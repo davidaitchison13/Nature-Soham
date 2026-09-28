@@ -27,6 +27,7 @@
         .location-actions { display: flex; flex-wrap: wrap; gap: .75rem; align-items: center; }
         .location-actions a { color: var(--forest-green); font-weight: bold; }
         .privacy-note { border-left: 4px solid var(--gold-accent); padding-left: 1rem; color: #444; }
+        .map-frame { width: 100%; height: 320px; margin-top: 1rem; border: 1px solid var(--moss-green); border-radius: 6px; }
         [hidden] { display: none !important; }
         @media (max-width: 600px) {
             .main-nav ul { flex-wrap: wrap; justify-content: center; padding: 0 .75rem; }
@@ -62,16 +63,18 @@
         <div class="location-actions">
             <button id="locate-button" type="button">Use my current location</button>
             <button id="copy-button" type="button" hidden>Copy coordinates</button>
+            <button id="frame-button" type="button" aria-expanded="false" aria-controls="location-frame" hidden>View in Frame</button>
             <a id="map-link" href="#" target="_blank" rel="noopener noreferrer" hidden>View on OpenStreetMap</a>
         </div>
         <p id="location-status" class="location-status" role="status" aria-live="polite">Location has not been requested.</p>
+        <iframe id="location-frame" class="map-frame" title="Map of your current location" loading="lazy" referrerpolicy="no-referrer" hidden></iframe>
         <dl id="location-result" class="coordinate-list" hidden>
             <dt>Latitude</dt><dd id="latitude"></dd>
             <dt>Longitude</dt><dd id="longitude"></dd>
             <dt>Accuracy</dt><dd id="accuracy"></dd>
             <dt>Updated</dt><dd id="updated"></dd>
         </dl>
-        <p class="privacy-note"><strong>Privacy:</strong> Location is requested only when you press the button. This page displays the result in your browser and does not save or send it. If you choose to open the map, the coordinates are included in a request to OpenStreetMap.</p>
+        <p class="privacy-note"><strong>Privacy:</strong> Location is requested only when you press the button. This page displays the result in your browser and does not save or send it. The map is not loaded until you choose “View in Frame” or “View on OpenStreetMap”; either choice sends the coordinates to OpenStreetMap to display the map.</p>
     </section>
 </main>
 <footer class="site-footer">
@@ -89,6 +92,8 @@
     const status = document.getElementById('location-status');
     const result = document.getElementById('location-result');
     const mapLink = document.getElementById('map-link');
+    const frameButton = document.getElementById('frame-button');
+    const locationFrame = document.getElementById('location-frame');
     let coordinates = null;
 
     function showError(error) {
@@ -110,13 +115,43 @@
         document.getElementById('accuracy').textContent = `Within about ${Math.round(accuracy)} metres`;
         document.getElementById('updated').textContent = new Date(position.timestamp).toLocaleString();
         mapLink.href = `https://www.openstreetmap.org/?mlat=${encodeURIComponent(latitude)}&mlon=${encodeURIComponent(longitude)}#map=16/${encodeURIComponent(latitude)}/${encodeURIComponent(longitude)}`;
+        if (!locationFrame.hidden) locationFrame.src = buildEmbedUrl(latitude, longitude);
         result.hidden = false;
         mapLink.hidden = false;
         copyButton.hidden = false;
+        frameButton.hidden = false;
         status.textContent = 'Location found. Review the coordinates before using them for a sighting.';
         locateButton.disabled = false;
         locateButton.textContent = 'Update my location';
     }
+
+    function buildEmbedUrl(latitude, longitude) {
+        const latitudePadding = 0.006;
+        const longitudePadding = 0.006 / Math.max(Math.cos(latitude * Math.PI / 180), 0.1);
+        const bounds = [
+            longitude - longitudePadding,
+            latitude - latitudePadding,
+            longitude + longitudePadding,
+            latitude + latitudePadding
+        ].map(value => value.toFixed(6)).join(',');
+        return `https://www.openstreetmap.org/export/embed.html?bbox=${encodeURIComponent(bounds)}&layer=mapnik&marker=${encodeURIComponent(latitude)},${encodeURIComponent(longitude)}`;
+    }
+
+    frameButton.addEventListener('click', () => {
+        if (!coordinates) return;
+        const isOpening = locationFrame.hidden;
+        locationFrame.hidden = !isOpening;
+        frameButton.setAttribute('aria-expanded', String(isOpening));
+        frameButton.textContent = isOpening ? 'Hide Map' : 'View in Frame';
+        if (isOpening) {
+            const [latitude, longitude] = coordinates.split(', ').map(Number);
+            locationFrame.src = buildEmbedUrl(latitude, longitude);
+            status.textContent = 'Map displayed below. OpenStreetMap receives the coordinates to load it.';
+        } else {
+            locationFrame.removeAttribute('src');
+            status.textContent = 'Map hidden.';
+        }
+    });
 
     locateButton.addEventListener('click', () => {
         if (!('geolocation' in navigator)) {
@@ -145,3 +180,4 @@
 </script>
 </body>
 </html>
+
