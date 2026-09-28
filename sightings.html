@@ -509,7 +509,40 @@
 
         return detailLeafletPromise;
     }
+    async function showDetailMap(latitude, longitude) {
+        detailMap.hidden = false;
+        detailMapLink.href =
+            `https://www.openstreetmap.org/?mlat=${encodeURIComponent(latitude)}&mlon=${encodeURIComponent(longitude)}#map=16/${encodeURIComponent(latitude)}/${encodeURIComponent(longitude)}`;
+        detailMapLink.hidden = false;
+        detailLocationNote.textContent =
+            "Map tiles load from OpenStreetMap when a coordinate is available.";
 
+        try {
+            await loadDetailLeaflet();
+
+            if (!detailMapInstance) {
+                detailMapInstance = L.map(detailMap).setView(
+                    [latitude, longitude],
+                    16
+                );
+                L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
+                    maxZoom: 19,
+                    attribution:
+                        '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap contributors</a>'
+                }).addTo(detailMapInstance);
+                detailMarker = L.marker([latitude, longitude]).addTo(detailMapInstance);
+            } else {
+                detailMapInstance.setView([latitude, longitude], 16);
+                detailMarker.setLatLng([latitude, longitude]);
+            }
+
+            requestAnimationFrame(() => detailMapInstance.invalidateSize());
+        } catch {
+            detailMap.hidden = true;
+            detailLocationNote.textContent =
+                "The map could not load. You can still open this location in OpenStreetMap.";
+        }
+    }
     function parseCsv(text) {
         const rows = [];
         let row = [];
