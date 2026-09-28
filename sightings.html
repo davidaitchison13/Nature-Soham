@@ -543,6 +543,50 @@
                 "The map could not load. You can still open this location in OpenStreetMap.";
         }
     }
+    function openSightingDetails(sighting, trigger) {
+        detailTrigger = trigger;
+        detailTitle.textContent =
+            `${sighting.Species || "Sighting"} — ${sighting.SightingID || ""}`;
+
+        const fields = [
+            ["Sighting ID", sighting.SightingID],
+            ["Type", sighting.SpecimenType],
+            ["Species", sighting.Species],
+            ["Location", sighting.Location],
+            ["Description", sighting.Description],
+            ["Date", sighting.Date],
+            ["Time", sighting.TimeOfDay],
+            ["Count", sighting.Count],
+            ["Weather", sighting.Weather],
+            ["Observer", sighting.ObserverName]
+        ];
+
+        detailFields.replaceChildren();
+        fields.forEach(([label, value]) => {
+            if (!value) return;
+
+            const term = document.createElement("dt");
+            term.textContent = label;
+
+            const description = document.createElement("dd");
+            description.textContent = value;
+
+            detailFields.append(term, description);
+        });
+
+        const coordinates = coordinatesFromLocation(sighting.Location);
+        detailMap.hidden = true;
+        detailMapLink.hidden = true;
+        detailLocationNote.textContent = coordinates
+            ? "Loading the sighting location map…"
+            : "No latitude/longitude pair was found in the Location field.";
+
+        detailDialog.showModal();
+
+        if (coordinates) {
+            showDetailMap(coordinates.latitude, coordinates.longitude);
+        }
+    }
     function parseCsv(text) {
         const rows = [];
         let row = [];
