@@ -442,6 +442,33 @@
     let displayedSightings = [];
     let headerSort = null;
 
+    const detailDialog = document.getElementById("sighting-detail-dialog");
+    const detailTitle = document.getElementById("sighting-detail-title");
+    const detailFields = document.getElementById("sighting-detail-fields");
+    const detailLocationNote = document.getElementById("sighting-detail-location-note");
+    const detailMap = document.getElementById("sighting-detail-map");
+    const detailMapLink = document.getElementById("sighting-detail-map-link");
+    let detailMapInstance = null;
+    let detailMarker = null;
+    let detailLeafletPromise = null;
+    let detailTrigger = null;
+
+    function coordinatesFromLocation(location) {
+        const match = String(location || "").match(/(?:^|[^\d.-])(-?\d{1,2}(?:\.\d+)?)\s*[,;]\s*(-?\d{1,3}(?:\.\d+)?)(?![\d.])/);
+        if (!match) return null;
+
+        const latitude = Number(match[1]);
+        const longitude = Number(match[2]);
+
+        if (!Number.isFinite(latitude) || !Number.isFinite(longitude) ||
+            latitude < -90 || latitude > 90 ||
+            longitude < -180 || longitude > 180) {
+            return null;
+        }
+
+        return { latitude, longitude };
+    }
+
     function parseCsv(text) {
         const rows = [];
         let row = [];
