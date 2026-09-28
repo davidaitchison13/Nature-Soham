@@ -539,6 +539,16 @@
             cell(sighting.Weather),
             cell(sighting.ObserverName)
         );
+        tr.dataset.detailsRow = "true";
+        tr.tabIndex = 0;
+        tr.title = "Select this row to view sighting details";
+        tr.addEventListener("click", () => openSightingDetails(sighting, tr));
+        tr.addEventListener("keydown", event => {
+            if (event.key === "Enter" || event.key === " ") {
+                event.preventDefault();
+                openSightingDetails(sighting, tr);
+            }
+        });
         return tr;
     }
 
