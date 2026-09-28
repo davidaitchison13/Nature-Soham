@@ -398,6 +398,16 @@
             </tbody>
         </table>
     </div>
+    <dialog id="sighting-detail-dialog" class="sighting-detail-dialog" aria-labelledby="sighting-detail-title">
+        <div class="sighting-detail-heading">
+            <h2 id="sighting-detail-title">Sighting details</h2>
+            <button type="button" id="sighting-detail-close" class="sighting-detail-close" aria-label="Close sighting details">Close</button>
+        </div>
+        <dl id="sighting-detail-fields" class="sighting-detail-fields"></dl>
+        <p id="sighting-detail-location-note" aria-live="polite"></p>
+        <div id="sighting-detail-map" class="sighting-detail-map" aria-label="Map showing the sighting location" hidden></div>
+        <a id="sighting-detail-map-link" class="sighting-detail-map-link" target="_blank" rel="noopener noreferrer" hidden>Open location in OpenStreetMap</a>
+    </dialog>
 </main>
 
 <footer class="site-footer">
