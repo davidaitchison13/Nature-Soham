@@ -468,6 +468,47 @@
 
         return { latitude, longitude };
     }
+    
+    function loadDetailLeaflet() {
+        if (window.L) return Promise.resolve();
+        if (detailLeafletPromise) return detailLeafletPromise;
+
+        const resources = [
+            {
+                tag: "link",
+                attributes: {
+                    rel: "stylesheet",
+                    href: "https://unpkg.com/leaflet@1.9.4/dist/leaflet.css",
+                    integrity: "sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+                }
+            },
+            {
+                tag: "script",
+                attributes: {
+                    src: "https://unpkg.com/leaflet@1.9.4/dist/leaflet.js",
+                    integrity: "sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+                }
+            }
+        ];
+
+        detailLeafletPromise = Promise.all(resources.map(resource =>
+            new Promise((resolve, reject) => {
+                const element = document.createElement(resource.tag);
+                Object.entries(resource.attributes).forEach(([name, value]) => {
+                    element.setAttribute(name, value);
+                });
+                element.crossOrigin = "anonymous";
+                element.onload = resolve;
+                element.onerror = reject;
+                document.head.appendChild(element);
+            })
+        )).catch(error => {
+            detailLeafletPromise = null;
+            throw error;
+        });
+
+        return detailLeafletPromise;
+    }
 
     function parseCsv(text) {
         const rows = [];
