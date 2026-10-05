@@ -387,12 +387,13 @@ form {
 }
 
 .useful-links-table th {
-    background-color: #254b2e;
+    background-color: var(--forest-green);
     color: #ffffff;
 }
 
 .useful-links-table tbody tr:nth-child(even) {
     background-color: #f7f9f6;
+    color: var(--text-dark);
 }
 
 @media (max-width: 600px) {
