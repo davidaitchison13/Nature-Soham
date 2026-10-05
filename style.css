@@ -370,3 +370,33 @@ form {
 .privacy-section h2 {
     text-align: left;
 }
+
+/* useful links page layout */
+
+.useful-links-table {
+    width: min(800px, 90%);
+    margin: 0 auto 2rem;
+    border-collapse: collapse;
+    text-align: left;
+}
+
+.useful-links-table th,
+.useful-links-table td {
+    padding: 0.7rem 1rem;
+    border: 1px solid #c7d3c3;
+}
+
+.useful-links-table th {
+    background-color: #e5eee2;
+}
+
+.useful-links-table tbody tr:nth-child(even) {
+    background-color: #f7f9f6;
+}
+
+@media (max-width: 600px) {
+    .useful-links-table th,
+    .useful-links-table td {
+        padding: 0.55rem;
+    }
+}
