@@ -420,3 +420,53 @@ form {
         padding: 0.55rem;
     }
 }
+
+.construction-notice {
+    width: min(900px, 90%);
+    margin: 1.5rem auto 0;
+    padding: 0 1rem;
+    box-sizing: border-box;
+    text-align: center;
+    background: #fffdf5;
+    border: 1px solid var(--gold-accent);
+}
+
+.construction-notice::before,
+.construction-notice::after {
+    content: "";
+    display: block;
+    height: 12px;
+    margin: 0 -1rem;
+    background: repeating-linear-gradient(
+        135deg,
+        #f4c542 0 14px,
+        #222 14px 28px
+    );
+    background-size: 40px 40px;
+    animation: construction-tape-move 1s linear infinite;
+}
+
+.construction-notice strong {
+    display: block;
+    margin-top: 0.8rem;
+    color: var(--forest-green);
+    font-size: 1rem;
+    text-transform: uppercase;
+}
+
+.construction-notice p {
+    margin: 0.5rem 0 0.8rem;
+    font-size: 0.9rem;
+}
+
+@keyframes construction-tape-move {
+    from { background-position: 0 0; }
+    to { background-position: 40px 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .construction-notice::before,
+    .construction-notice::after {
+        animation: none;
+    }
+}
