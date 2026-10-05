@@ -387,7 +387,8 @@ form {
 }
 
 .useful-links-table th {
-    background-color: #e5eee2;
+    background-color: #254b2e;
+    color: #ffffff;
 }
 
 .useful-links-table tbody tr:nth-child(even) {
