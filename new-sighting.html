@@ -7,6 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Submit a New Sighting – Nature Soham</title>
     <link rel="stylesheet" href="style.css">
+    <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
 </head>
 
 <body>
@@ -158,6 +159,7 @@
         <input type="tel" id="phone" name="phone" placeholder="01234 567890">
     </div>
 
+    <div class="cf-turnstile" data-sitekey="0x4AAAAAAFS-fPYf1ETkB1Qb"></div>
     <div class="form-buttons">
         <button type="reset" class="clear-button">Clear Form</button>
         <button type="submit">Submit Sighting</button>
@@ -204,7 +206,8 @@ document.getElementById("sighting-form").addEventListener("submit", async functi
     photoFilename: photoInput.files.length ? photoInput.files[0].name : "",
     observerName: document.getElementById("observer").value,
     email: document.getElementById("email").value,
-    phone: document.getElementById("phone").value
+    phone: document.getElementById("phone").value,
+    turnstileToken: document.querySelector('[name="cf-turnstile-response"]')?.value || ""
   };
 
   try {
@@ -234,7 +237,8 @@ document.getElementById("sighting-form").addEventListener("submit", async functi
     alert("Your sighting has been received and is being processed, but the confirmation summary could not be shown.");
     form.reset();
 }
-  } catch (error) {
+} catch (error) {
+    if (window.turnstile) window.turnstile.reset();
     showSubmissionError(error.message);
   } finally {
     submitButton.disabled = false;
