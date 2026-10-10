@@ -428,7 +428,7 @@ form {
     font-weight: bold;
 }
 
-.privacy-note {
+.location-panel .privacy-note {
     border-left: 4px solid var(--gold-accent);
     padding-left: 1rem;
     color: #444;
@@ -585,12 +585,12 @@ main.sightings-page {
 }
 
 .sightings-intro,
-.privacy-note,
+.sightings-page .privacy-note,
 .results-summary {
     line-height: 1.55;
 }
 
-.privacy-note {
+.sightings-page .privacy-note {
     padding: 0.85rem 1rem;
     border-left: 4px solid var(--moss-green);
     background: #fff;
