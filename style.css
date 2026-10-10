@@ -46,7 +46,8 @@ body {
 .logo-link {
    width: min(300px, calc(100vw - 2rem));
    aspect-ratio: 2 / 1;
-   height: auto;    border: 3px solid #c9a64b;
+   height: auto;
+   border: 3px solid #c9a64b;
     border-radius: 50%;
     overflow: hidden;
     display: flex;
