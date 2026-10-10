@@ -968,3 +968,19 @@ main.confirmation-page {
 #missing-details {
     border-left-color: #a33a2a;
 }
+
+@media (max-width: 600px) {
+    main.confirmation-page {
+        width: calc(100% - 1rem);
+        padding: 0.5rem;
+    }
+
+    .submission-summary {
+        grid-template-columns: 1fr;
+        gap: 0.2rem;
+    }
+
+    .submission-summary dd {
+        margin-bottom: 0.7rem;
+    }
+}
