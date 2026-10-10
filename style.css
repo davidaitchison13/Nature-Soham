@@ -955,3 +955,22 @@ main.confirmation-page {
         margin-bottom: 0.7rem;
     }
 }
+
+@media (max-width: 600px) {
+    .form-row {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 0.5rem;
+    }
+
+    .form-row label {
+        width: auto;
+    }
+
+    .form-row input,
+    .form-row textarea,
+    .form-row select {
+        width: 100%;
+        box-sizing: border-box;
+    }
+}
