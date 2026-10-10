@@ -855,6 +855,7 @@ table.results-table {
     grid-template-columns: max-content 1fr;
     gap: .4rem .8rem;
     margin: 0 0 1rem;
+    line-height: 1.5;
 }
 
 .sighting-detail-fields dt {
