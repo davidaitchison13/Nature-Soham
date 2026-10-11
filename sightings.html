@@ -198,7 +198,7 @@
 
         return {
             shareUrl: `https://drive.google.com/file/d/${match[1]}/view`,
-            imageUrl: `https://drive.google.com/uc?export=view&id=${match[1]}`
+            imageUrl: `https://drive.google.com/thumbnail?id=${match[1]}&sz=w1200`
         };
     }
     
@@ -309,6 +309,7 @@
 
         const approvedPhoto = approvedDrivePhotoUrl(sighting.PhotoFilename);
         detailPhoto.hidden = !approvedPhoto;
+        detailPhotoImage.hidden = false;
         detailPhotoImage.removeAttribute("src");
         detailPhotoImage.alt = `Approved photo for ${sighting.Species || "this wildlife sighting"}`;
         detailPhotoLink.removeAttribute("href");
@@ -337,6 +338,7 @@
 
     detailDialog.addEventListener("close", () => {
         detailPhoto.hidden = true;
+        detailPhotoImage.hidden = false;
         detailPhotoImage.removeAttribute("src");
 
         if (detailMapInstance) {
@@ -348,6 +350,10 @@
         if (detailTrigger?.isConnected) {
             detailTrigger.focus();
         }
+    });
+
+    detailPhotoImage.addEventListener("error", () => {
+        detailPhotoImage.hidden = true;
     });
     function parseCsv(text) {
         const rows = [];
