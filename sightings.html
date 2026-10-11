@@ -77,6 +77,12 @@
                     <option value="species">Species A–Z</option>
                 </select>
             </div>
+            <div class="query-field query-photo-filter">
+                <label for="photo-only">
+                    <input id="photo-only" name="photoOnly" type="checkbox">
+                    Only show sightings with a photo
+                </label>
+            </div>
         </div>
         <div class="query-actions">
             <button type="submit">Search</button>
@@ -527,6 +533,7 @@
         const fromDate = document.getElementById("date-from").value;
         const toDate = document.getElementById("date-to").value;
         const sort = document.getElementById("sort-order").value;
+        const photoOnly = document.getElementById("photo-only").checked;
 
         const matches = sightings.filter(item => {
             const keywordMatch = !keyword || FILTER_COLUMNS.keyword.some(column =>
@@ -537,7 +544,8 @@
                 (!weather || item[FILTER_COLUMNS.weather] === weather) &&
                 (!time || item[FILTER_COLUMNS.time] === time) &&
                 (!fromDate || item.Date >= fromDate) &&
-                (!toDate || item.Date <= toDate);
+                (!toDate || item.Date <= toDate) &&
+                (!photoOnly || Boolean(String(item.PhotoFilename || "").trim()));
         });
 
         if (headerSort) {
@@ -669,6 +677,7 @@
         window.setTimeout(filterAndRender, 0);
     });
     document.getElementById("refresh-data").addEventListener("click", loadDatabase);
+    document.getElementById("photo-only").addEventListener("change", filterAndRender);
         document.querySelectorAll(".sort-header").forEach(button => {
         button.addEventListener("click", () => {
             const key = button.dataset.sortKey;
