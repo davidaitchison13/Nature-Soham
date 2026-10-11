@@ -28,7 +28,7 @@
 
 <main>
     <h1>Privacy Policy</h1>
-    <p><em>Last updated: September 2026</em></p>
+    <p><em>Last updated: October 2026</em></p>
 
     <section class="privacy-section">
 
@@ -44,11 +44,16 @@
         <p>
         <strong>Sighting details:</strong> (Species, location, date, notes, etc.) Publicly displayed.<br>
         <strong>Name:</strong> Publicly displayed.<br>
-        <strong>Email address:</strong> Encrypted and stored securely; never displayed publicly.<br>
-        <strong>Phone number:</strong> Encrypted and stored securely; never displayed publicly.</p>
+        <strong>Email address:</strong> Stored in the private submission database and encrypted before being included in the public sightings dataset; never displayed publicly.<br>
+        <strong>Phone number:</strong> Stored in the private submission database and encrypted before being included in the public sightings dataset; never displayed publicly.<br>
+        <strong>Photographs:</strong> Resized before submission and stored privately in Google Drive while reviewed. A photograph is only displayed publicly if an administrator approves it.</p>
+
+        <h2>Photographs</h2>
+        <p>Photographs are optional. Submitted images are resized and converted to JPEG in your browser before they are sent to our submission service and stored in a private Google Drive folder for manual review. They are not automatically published. If approved, a photograph may be displayed with its wildlife sighting; unapproved photographs will not be displayed on the website.</p>
+        <p>Please avoid including people, vehicle registration plates, or sensitive personal information in photographs. Contact us through the <a href="contact.html">Contact</a> page to ask about a photograph you submitted.</p>
 
         <h2>How Your Data Is Protected</h2>
-        <p>Email addresses and phone numbers are encrypted before being stored in our database.</p>
+        <p>Email addresses and phone numbers are stored in a private Cloudflare D1 database, which Cloudflare says encrypts data at rest. The Worker also encrypts these values before adding a row to the GitHub-hosted sightings dataset. Only authorised administrators with access to the encryption key can decrypt those dataset values.</p>
         <p>Only authorised administrators can decrypt and view contact details.</p>
         <p>The public sightings database displays only your name and sighting details.</p>
 
@@ -67,7 +72,7 @@
             <strong>Public visitors:</strong> Can see your name and sighting details only.<br>
             <strong>Administrators:</strong> Can decrypt and view email and phone number if needed.
         </p>
-        <p>We do not share your data with third parties.</p>
+        <p>We use Cloudflare to process submissions and store private contact details, GitHub to host the sightings dataset, and Google Drive to store submitted photographs privately while they are reviewed. These service providers process data to provide those services.</p>
 
         <h2>Your Rights</h2>
         <p>Under UK GDPR, you have the right to access, correct, delete, or object to the processing of your personal data, and request data portability.</p>
