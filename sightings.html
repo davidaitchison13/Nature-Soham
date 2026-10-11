@@ -95,6 +95,7 @@
                     <th scope="col"><button type="button" class="sort-header" data-sort-key="SightingID">Sighting ID</button></th>
                     <th scope="col"><button type="button" class="sort-header" data-sort-key="SpecimenType">Type</button></th>
                     <th scope="col"><button type="button" class="sort-header" data-sort-key="Species">Species</button></th>
+                    <th scope="col">Photo</th>
                     <th scope="col"><button type="button" class="sort-header" data-sort-key="Location">Location</button></th>
                     <th scope="col"><button type="button" class="sort-header" data-sort-key="Description">Description</button></th>
                     <th scope="col"><button type="button" class="sort-header" data-sort-key="Date">Date</button></th>
@@ -105,7 +106,7 @@
                 </tr>
             </thead>
             <tbody id="results-body">
-                <tr><td colspan="11" class="loading-message">Loading the public database…</td></tr>
+                <tr><td colspan="12" class="loading-message">Loading the public database…</td></tr>
             </tbody>
         </table>
     </div>
@@ -438,12 +439,64 @@
         return td;
     }
 
+    function photoStatusCell(sighting) {
+        const td = document.createElement("td");
+        td.className = "photo-status-cell";
+        const photoValue = String(sighting.PhotoFilename || "").trim();
+
+        if (!photoValue) {
+            td.textContent = "—";
+            td.setAttribute("aria-label", "No photo submitted");
+            return td;
+        }
+
+        const approvedPhoto = approvedDrivePhotoUrl(photoValue);
+        if (!approvedPhoto) {
+            const pending = document.createElement("span");
+            pending.className = "photo-pending-status";
+            pending.append(makeClockIcon(), document.createTextNode("Pending review"));
+            td.append(pending);
+            return td;
+        }
+
+        const image = document.createElement("img");
+        image.className = "photo-thumbnail";
+        image.src = approvedPhoto.imageUrl;
+        image.alt = `Approved photo of ${sighting.Species || "wildlife"}`;
+        image.loading = "lazy";
+        image.addEventListener("error", () => {
+            const unavailable = document.createElement("span");
+            unavailable.className = "photo-approved-status";
+            unavailable.textContent = "Photo approved";
+            td.replaceChildren(unavailable);
+        }, { once: true });
+        td.append(image);
+        return td;
+    }
+
+    function makeClockIcon() {
+        const namespace = "http://www.w3.org/2000/svg";
+        const icon = document.createElementNS(namespace, "svg");
+        icon.setAttribute("viewBox", "0 0 20 20");
+        icon.setAttribute("aria-hidden", "true");
+        icon.setAttribute("focusable", "false");
+        const face = document.createElementNS(namespace, "circle");
+        face.setAttribute("cx", "10");
+        face.setAttribute("cy", "10");
+        face.setAttribute("r", "7.5");
+        const hands = document.createElementNS(namespace, "path");
+        hands.setAttribute("d", "M10 5.5v4.8l3 1.8");
+        icon.append(face, hands);
+        return icon;
+    }
+
     function rowFor(sighting) {
         const tr = document.createElement("tr");
         tr.append(
             cell(sighting.SightingID),
             cell(sighting.SpecimenType),
             cell(sighting.Species),
+            photoStatusCell(sighting),
             cell(sighting.Location),
             cell(sighting.Description, "description-cell"),
             cell(sighting.Date),
@@ -534,7 +587,7 @@
         if (matches.length === 0) {
             const tr = document.createElement("tr");
             const td = cell("No sightings match those filters.");
-            td.colSpan = PUBLIC_COLUMNS.length;
+            td.colSpan = PUBLIC_COLUMNS.length + 1;
             tr.append(td);
             resultsBody.append(tr);
         } else {
