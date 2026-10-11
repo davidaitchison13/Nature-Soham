@@ -35,143 +35,146 @@
     <h1>Submit a New Wildlife Sighting</h1>
     <p>Please complete the form below to add a new sighting to the Nature Soham database.</p>
 
-    <form id="sighting-form">
+<form id="sighting-form">
 
-        <div class="form-row">
-            <label for="specimen">What type of specimen did you see?</label>
-            <select id="specimen" name="specimen" required>
-                <option value="">Select type...</option>
-                <option>Amphibian</option>
-                <option>Arachnid</option>
-                <option>Bird</option>
-                <option>Fish</option>
-                <option>Fungi</option>
-                <option>Insect</option>
-                <option>Mammal</option>
-                <option>Plant</option>
-                <option>Reptile</option>
-                <option>Other</option>
-            </select>
+    <div class="form-row">
+        <label for="specimen">What type of specimen did you see?</label>
+        <select id="specimen" name="specimen" required>
+            <option value="">Select type...</option>
+            <option>Amphibian</option>
+            <option>Arachnid</option>
+            <option>Bird</option>
+            <option>Fish</option>
+            <option>Fungi</option>
+            <option>Insect</option>
+            <option>Mammal</option>
+            <option>Plant</option>
+            <option>Reptile</option>
+            <option>Other</option>
+        </select>
+    </div>
+
+    <div class="form-row">
+        <label for="species">What species (or colloquial) name do you believe it was?</label>
+        <input type="text" id="species" name="species" required>
+    </div>
+
+    <div class="form-row">
+        <label for="location">Where did you see the specimen?</label>
+        <input type="text" id="location" name="location" required>
+    </div>
+    
+    <div class="form-row">
+        <label for="description">Please describe the sighting (e.g. behaviours, location description etc.):</label>
+        <textarea id="description" name="description" rows="4" required></textarea>
+    </div>
+
+    <div class="form-row">
+        <label for="date">What was the date of the sighting?</label>
+        <input type="date" id="date" name="date" required>
+    </div>
+
+    <div class="form-row">
+        <label for="time">What time of day was the specimen seen?</label>
+        <select id="time" name="time" required>
+            <option value="">Select time...</option>
+            <option>Dawn</option>
+            <option>Morning</option>
+            <option>Afternoon</option>
+            <option>Dusk</option>
+            <option>Night</option>
+        </select>
+    </div>
+
+    <div class="form-row">
+        <label for="count">How many specimens did you see?</label>
+        <select id="count" name="count" required>
+            <option value="">Select count...</option>
+            <option>1</option>
+            <option>2</option>
+            <option>3</option>
+            <option>4</option>
+            <option>5</option>
+            <option>6</option>
+            <option>7</option>
+            <option>8</option>
+            <option>9</option>
+            <option>10</option>
+            <option>More than 10</option>
+        </select>
+    </div>
+
+    <div class="form-row">
+    <label for="weather">What were the weather conditions when you sighted the specimen?</label>
+    <select id="weather" name="weather" required>
+        <option value="">Select weather...</option>
+        <option>Bright</option>
+        <option>Sunny</option>
+        <option>Overcast</option>
+        <option>Cloudy</option>
+        <option>Light rain</option>
+        <option>Heavy rain</option>
+        <option>Drizzle</option>
+        <option>Wet</option>
+        <option>Dry</option>
+        <option>Windy</option>
+        <option>Breezy</option>
+        <option>Calm</option>
+        <option>Misty</option>
+        <option>Foggy</option>
+        <option>Cold</option>
+        <option>Cool</option>
+        <option>Mild</option>
+        <option>Warm</option>
+        <option>Hot</option>
+        <option>Frosty</option>
+        <option>Snowy</option>
+    </select>
+</div>
+
+    <div class="form-row photo-row">
+        <label for="photo">Upload a photograph (optional)</label>
+        <div class="photo-upload-controls">
+            <input type="file" id="photo" name="photo" accept="image/jpeg,image/png,image/webp">
+            <p class="form-note photo-guidance">JPEG, PNG or WebP, up to 15 MB. The image is resized and converted before upload, then held privately for review. Approved photos may be shown with the sighting on this website.</p>
+            <label class="photo-consent" for="photo-consent">
+                <input type="checkbox" id="photo-consent">
+                <span>I confirm I took this photo or have permission from its copyright owner to grant this use. I give Nature Soham a non-exclusive, royalty-free permission to store it privately for review and, if approved, display it with this sighting on the Nature Soham website. I retain the copyright.</span>
+            </label>
         </div>
+    </div>
+    
+    <div class="form-row">
+        <label for="observer">Your name (or nickname):</label>
+        <input type="text" id="observer" name="observer" required>
+    </div>
 
-        <div class="form-row">
-            <label for="species">What species (or colloquial) name do you believe it was?</label>
-            <input type="text" id="species" name="species" required>
-        </div>
+    <p class="form-note">
+        Your name will be visible to others when browsing the public sightings database. 
+        If you prefer not to use your real name, you may enter a nickname instead.
+        Your email address and phone number will <strong>not</strong> be made public.
+    </p>
 
-        <div class="form-row">
-            <label for="location">Where did you see the specimen?</label>
-            <input type="text" id="location" name="location" required>
-        </div>
 
-        <div class="form-row">
-            <label for="description">Please describe the sighting (e.g. behaviours, location description etc.):</label>
-            <textarea id="description" name="description" rows="4" required></textarea>
-        </div>
+    <div class="form-row">
+        <label for="email">Your email address (optional):</label>
+        <input type="email" id="email" name="email" placeholder="you@example.com">
+    </div>
 
-        <div class="form-row">
-            <label for="date">What was the date of the sighting?</label>
-            <input type="date" id="date" name="date" required>
-        </div>
+    <div class="form-row">
+        <label for="phone">Your phone number (optional):</label>
+        <input type="tel" id="phone" name="phone" placeholder="01234 567890">
+    </div>
 
-        <div class="form-row">
-            <label for="time">What time of day was the specimen seen?</label>
-            <select id="time" name="time" required>
-                <option value="">Select time...</option>
-                <option>Dawn</option>
-                <option>Morning</option>
-                <option>Afternoon</option>
-                <option>Dusk</option>
-                <option>Night</option>
-            </select>
-        </div>
+    <div class="cf-turnstile" data-sitekey="0x4AAAAAAFS-fPYf1ETkB1Qb"></div>
+    <div class="form-buttons">
+        <button type="reset" class="clear-button">Clear Form</button>
+        <button type="submit">Submit Sighting</button>
+    </div>
 
-        <div class="form-row">
-            <label for="count">How many specimens did you see?</label>
-            <select id="count" name="count" required>
-                <option value="">Select count...</option>
-                <option>1</option>
-                <option>2</option>
-                <option>3</option>
-                <option>4</option>
-                <option>5</option>
-                <option>6</option>
-                <option>7</option>
-                <option>8</option>
-                <option>9</option>
-                <option>10</option>
-                <option>More than 10</option>
-            </select>
-        </div>
+</form>
 
-        <div class="form-row">
-            <label for="weather">What were the weather conditions when you sighted the specimen?</label>
-            <select id="weather" name="weather" required>
-                <option value="">Select weather...</option>
-                <option>Bright</option>
-                <option>Sunny</option>
-                <option>Overcast</option>
-                <option>Cloudy</option>
-                <option>Light rain</option>
-                <option>Heavy rain</option>
-                <option>Drizzle</option>
-                <option>Wet</option>
-                <option>Dry</option>
-                <option>Windy</option>
-                <option>Breezy</option>
-                <option>Calm</option>
-                <option>Misty</option>
-                <option>Foggy</option>
-                <option>Cold</option>
-                <option>Cool</option>
-                <option>Mild</option>
-                <option>Warm</option>
-                <option>Hot</option>
-                <option>Frosty</option>
-                <option>Snowy</option>
-            </select>
-        </div>
 
-        <div class="form-row photo-row">
-            <label for="photo">Upload a photograph (optional)</label>
-            <div class="photo-upload-controls">
-                <input type="file" id="photo" name="photo" accept="image/jpeg,image/png,image/webp">
-                <p class="form-note photo-guidance">JPEG, PNG or WebP, up to 15 MB. The image is resized and converted before upload, then held privately for review. Approved photos may be shown with the sighting.</p>
-                <label class="photo-consent" for="photo-consent">
-                    <input type="checkbox" id="photo-consent">
-                    <span>I understand that my photo will be stored privately for review and may be displayed publicly if approved.</span>
-                </label>
-            </div>
-        </div>
-
-        <div class="form-row">
-            <label for="observer">Your name (or nickname):</label>
-            <input type="text" id="observer" name="observer" required>
-        </div>
-
-        <p class="form-note">
-            Your name will be visible to others when browsing the public sightings database.
-            If you prefer not to use your real name, you may enter a nickname instead.
-            Your email address and phone number will <strong>not</strong> be made public.
-        </p>
-
-        <div class="form-row">
-            <label for="email">Your email address (optional):</label>
-            <input type="email" id="email" name="email" placeholder="you@example.com">
-        </div>
-
-        <div class="form-row">
-            <label for="phone">Your phone number (optional):</label>
-            <input type="tel" id="phone" name="phone" placeholder="01234 567890">
-        </div>
-
-        <div class="cf-turnstile" data-sitekey="0x4AAAAAAFS-fPYf1ETkB1Qb"></div>
-        <div class="form-buttons">
-            <button type="reset" class="clear-button">Clear Form</button>
-            <button type="submit">Submit Sighting</button>
-        </div>
-
-    </form>
 </main>
 
 <!-- Footer -->
@@ -189,148 +192,124 @@
 const WORKER_URL = "https://floral-dawn-326d.davidaitchison13.workers.dev/";
 
 async function preparePhoto(file) {
-    if (!file) return null;
-
-    if (!["image/jpeg", "image/png", "image/webp"].includes(file.type) ||
-        file.size > 15 * 1024 * 1024) {
-        throw new Error("Choose a JPEG, PNG or WebP image no larger than 15 MB.");
-    }
-
-    let bitmap;
-    try {
-        bitmap = await createImageBitmap(file);
-    } catch {
-        throw new Error("That image could not be opened. Please choose a JPEG, PNG or WebP photo.");
-    }
-
-    try {
-        const scale = Math.min(1, 1600 / Math.max(bitmap.width, bitmap.height));
-        const canvas = document.createElement("canvas");
-        canvas.width = Math.max(1, Math.round(bitmap.width * scale));
-        canvas.height = Math.max(1, Math.round(bitmap.height * scale));
-
-        const context = canvas.getContext("2d");
-        context.fillStyle = "#ffffff";
-        context.fillRect(0, 0, canvas.width, canvas.height);
-        context.drawImage(bitmap, 0, 0, canvas.width, canvas.height);
-
-        let blob = await new Promise(resolve =>
-            canvas.toBlob(resolve, "image/jpeg", 0.78)
-        );
-
-        if (!blob) {
-            throw new Error("The photo could not be prepared. Please try another image.");
-        }
-
-        if (blob.size > 550000) {
-            blob = await new Promise(resolve =>
-                canvas.toBlob(resolve, "image/jpeg", 0.55)
-            );
-        }
-
-        if (!blob || blob.size > 550000) {
-            throw new Error("This photo is still too large after compression. Please choose a smaller image.");
-        }
-
-        const base64 = await new Promise((resolve, reject) => {
-            const reader = new FileReader();
-            reader.onload = () => resolve(String(reader.result).split(",")[1]);
-            reader.onerror = () => reject(new Error("The photo could not be read. Please try again."));
-            reader.readAsDataURL(blob);
-        });
-
-        return { mimeType: "image/jpeg", base64 };
-    } finally {
-        bitmap.close();
-    }
+  if (!file) return null;
+  if (!["image/jpeg", "image/png", "image/webp"].includes(file.type) || file.size > 15 * 1024 * 1024) {
+    throw new Error("Choose a JPEG, PNG or WebP image no larger than 15 MB.");
+  }
+  let bitmap;
+  try { bitmap = await createImageBitmap(file); }
+  catch { throw new Error("That image could not be opened. Please choose a JPEG, PNG or WebP photo."); }
+  try {
+    const scale = Math.min(1, 1600 / Math.max(bitmap.width, bitmap.height));
+    const canvas = document.createElement("canvas");
+    canvas.width = Math.max(1, Math.round(bitmap.width * scale));
+    canvas.height = Math.max(1, Math.round(bitmap.height * scale));
+    const context = canvas.getContext("2d");
+    context.fillStyle = "#ffffff";
+    context.fillRect(0, 0, canvas.width, canvas.height);
+    context.drawImage(bitmap, 0, 0, canvas.width, canvas.height);
+    let blob = await new Promise(resolve => canvas.toBlob(resolve, "image/jpeg", 0.78));
+    if (!blob) throw new Error("The photo could not be prepared. Please try another image.");
+    if (blob.size > 550000) blob = await new Promise(resolve => canvas.toBlob(resolve, "image/jpeg", 0.55));
+    if (!blob || blob.size > 550000) throw new Error("This photo is still too large after compression. Please choose a smaller image.");
+    const base64 = await new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = () => resolve(String(reader.result).split(",")[1]);
+      reader.onerror = () => reject(new Error("The photo could not be read. Please try again."));
+      reader.readAsDataURL(blob);
+    });
+    return { mimeType: "image/jpeg", base64 };
+  } finally {
+    bitmap.close();
+  }
 }
 
 const photoInput = document.getElementById("photo");
 const photoConsent = document.getElementById("photo-consent");
-
 photoInput.addEventListener("change", () => {
-    photoConsent.required = photoInput.files.length > 0;
-    if (!photoInput.files.length) photoConsent.checked = false;
+  photoConsent.required = photoInput.files.length > 0;
+  if (!photoInput.files.length) photoConsent.checked = false;
 });
 
 function showSubmissionError(message) {
-    alert(message || "Your sighting could not be submitted. Please try again later.");
+  alert(message || "Your sighting could not be submitted. Please try again later.");
 }
 
 document.getElementById("sighting-form").addEventListener("submit", async function (event) {
-    event.preventDefault();
+  event.preventDefault();
+  const form = event.currentTarget;
+  const submitButton = form.querySelector('button[type="submit"]');
+  submitButton.disabled = true;
 
-    const form = event.currentTarget;
-    const submitButton = form.querySelector('button[type="submit"]');
-    submitButton.disabled = true;
+  try {
+  const photoFile = photoInput.files[0] || null;
+  if (photoFile && !photoConsent.checked) {
+    submitButton.disabled = false;
+    photoConsent.focus();
+    return;
+  }
+  const payload = {
+    specimenType: document.getElementById("specimen").value,
+    species: document.getElementById("species").value,
+    location: document.getElementById("location").value,
+    description: document.getElementById("description").value,
+    date: document.getElementById("date").value,
+    timeOfDay: document.getElementById("time").value,
+    count: document.getElementById("count").value,
+    weather: document.getElementById("weather").value,
+    photo: await preparePhoto(photoFile),
+    photoConsent: photoConsent.checked,
+    observerName: document.getElementById("observer").value,
+    email: document.getElementById("email").value,
+    phone: document.getElementById("phone").value,
+    turnstileToken: document.querySelector('[name="cf-turnstile-response"]')?.value || ""
+  };
 
-    try {
-        const photoFile = photoInput.files[0] || null;
-
-        if (photoFile && !photoConsent.checked) {
-            submitButton.disabled = false;
-            photoConsent.focus();
-            return;
-        }
-
-        const payload = {
-            specimenType: document.getElementById("specimen").value,
-            species: document.getElementById("species").value,
-            location: document.getElementById("location").value,
-            description: document.getElementById("description").value,
-            date: document.getElementById("date").value,
-            timeOfDay: document.getElementById("time").value,
-            count: document.getElementById("count").value,
-            weather: document.getElementById("weather").value,
-            photo: await preparePhoto(photoFile),
-            photoConsent: photoConsent.checked,
-            observerName: document.getElementById("observer").value,
-            email: document.getElementById("email").value,
-            phone: document.getElementById("phone").value,
-            turnstileToken: document.querySelector('[name="cf-turnstile-response"]')?.value || ""
-        };
-
-        const response = await fetch(WORKER_URL, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(payload)
-        });
-
-        const result = await response.json().catch(() => ({}));
-        if (!response.ok || !result.success) {
-            throw new Error(result.error || "Your sighting could not be submitted. Please try again later.");
-        }
-
-        try {
-            sessionStorage.setItem("natureSohamSubmissionSummary", JSON.stringify({
-                specimenType: payload.specimenType,
-                species: payload.species,
-                location: payload.location,
-                description: payload.description,
-                date: payload.date,
-                timeOfDay: payload.timeOfDay,
-                count: payload.count,
-                weather: payload.weather,
-                observerName: payload.observerName
-            }));
-            window.location.href = "submission-confirmation.html";
-        } catch {
-            alert("Your sighting has been received and is being processed, but the confirmation summary could not be shown.");
-            form.reset();
-        }
-    } catch (error) {
-        if (window.turnstile) window.turnstile.reset();
-        showSubmissionError(error.message);
-    } finally {
-        submitButton.disabled = false;
+  try {
+    const response = await fetch(WORKER_URL, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload)
+    });
+    const result = await response.json().catch(() => ({}));
+    if (!response.ok || !result.success) {
+      throw new Error(result.error || "Your sighting could not be submitted. Please try again later.");
     }
+    try {
+        sessionStorage.setItem("natureSohamSubmissionSummary", JSON.stringify({
+            specimenType: payload.specimenType,
+            species: payload.species,
+            location: payload.location,
+            description: payload.description,
+            date: payload.date,
+            timeOfDay: payload.timeOfDay,
+            count: payload.count,
+            weather: payload.weather,
+            observerName: payload.observerName
+        }));
+    window.location.href = "submission-confirmation.html";
+} catch {
+    alert("Your sighting has been received and is being processed, but the confirmation summary could not be shown.");
+    form.reset();
+}
+  } catch (error) {
+    if (window.turnstile) window.turnstile.reset();
+    showSubmissionError(error.message);
+  } finally {
+    submitButton.disabled = false;
+  }
+  } catch (error) {
+    if (window.turnstile) window.turnstile.reset();
+    showSubmissionError(error.message);
+    submitButton.disabled = false;
+  }
 });
 
 document.getElementById("sighting-form").addEventListener("reset", () => {
-    setTimeout(() => {
-        photoConsent.required = false;
-        photoConsent.checked = false;
-    }, 0);
+  setTimeout(() => {
+    photoConsent.required = false;
+    photoConsent.checked = false;
+  }, 0);
 });
 </script>
 
