@@ -115,6 +115,12 @@
             <button type="button" id="sighting-detail-close" class="sighting-detail-close" aria-label="Close sighting details">Close</button>
         </div>
         <dl id="sighting-detail-fields" class="sighting-detail-fields"></dl>
+        <figure id="sighting-detail-photo" class="sighting-detail-photo" hidden>
+            <img id="sighting-detail-photo-image" alt="">
+            <figcaption>
+                <a id="sighting-detail-photo-link" target="_blank" rel="noopener noreferrer">Open photo in Google Drive</a>
+            </figcaption>
+        </figure>
         <p id="sighting-detail-location-note" aria-live="polite"></p>
         <div id="sighting-detail-map" class="sighting-detail-map" aria-label="Map showing the sighting location" hidden></div>
         <a id="sighting-detail-map-link" class="sighting-detail-map-link" target="_blank" rel="noopener noreferrer" hidden>Open location in OpenStreetMap</a>
@@ -157,6 +163,9 @@
     const detailDialog = document.getElementById("sighting-detail-dialog");
     const detailTitle = document.getElementById("sighting-detail-title");
     const detailFields = document.getElementById("sighting-detail-fields");
+    const detailPhoto = document.getElementById("sighting-detail-photo");
+    const detailPhotoImage = document.getElementById("sighting-detail-photo-image");
+    const detailPhotoLink = document.getElementById("sighting-detail-photo-link");
     const detailLocationNote = document.getElementById("sighting-detail-location-note");
     const detailMap = document.getElementById("sighting-detail-map");
     const detailMapLink = document.getElementById("sighting-detail-map-link");
@@ -179,6 +188,18 @@
         }
 
         return { latitude, longitude };
+    }
+
+    function approvedDrivePhotoUrl(value) {
+        const match = String(value || "").trim().match(
+            /^https:\/\/drive\.google\.com\/file\/d\/([A-Za-z0-9_-]+)\/(?:view|preview)(?:\?[A-Za-z0-9_=&%-]*)?$/
+        );
+        if (!match) return null;
+
+        return {
+            shareUrl: `https://drive.google.com/file/d/${match[1]}/view`,
+            imageUrl: `https://drive.google.com/uc?export=view&id=${match[1]}`
+        };
     }
     
     function loadDetailLeaflet() {
@@ -286,6 +307,16 @@
             detailFields.append(term, description);
         });
 
+        const approvedPhoto = approvedDrivePhotoUrl(sighting.PhotoFilename);
+        detailPhoto.hidden = !approvedPhoto;
+        detailPhotoImage.removeAttribute("src");
+        detailPhotoImage.alt = `Approved photo for ${sighting.Species || "this wildlife sighting"}`;
+        detailPhotoLink.removeAttribute("href");
+        if (approvedPhoto) {
+            detailPhotoLink.href = approvedPhoto.shareUrl;
+            detailPhotoImage.src = approvedPhoto.imageUrl;
+        }
+
         const coordinates = coordinatesFromLocation(sighting.Location);
         detailMap.hidden = true;
         detailMapLink.hidden = true;
@@ -305,6 +336,9 @@
     );
 
     detailDialog.addEventListener("close", () => {
+        detailPhoto.hidden = true;
+        detailPhotoImage.removeAttribute("src");
+
         if (detailMapInstance) {
             detailMapInstance.remove();
             detailMapInstance = null;
