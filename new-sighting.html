@@ -133,10 +133,19 @@
 </div>
 
     <div class="form-row">
+    <div class="form-row photo-row">
         <label for="photo">Upload a photograph (optional)</label>
+        <div class="photo-upload-controls">
         <input type="file" id="photo" name="photo" accept="image/jpeg,image/png,image/webp">
         <p class="form-note">JPEG, PNG or WebP, up to 15 MB. The image is resized and converted before upload, then held privately for review. Approved photos may be shown with the sighting.</p>
         <label class="form-note"><input type="checkbox" id="photo-consent"> I understand that my photo will be stored privately for review and may be displayed publicly if approved.</label>
+            <input type="file" id="photo" name="photo" accept="image/jpeg,image/png,image/webp">
+            <p class="form-note photo-guidance">JPEG, PNG or WebP, up to 15 MB. The image is resized and converted before upload, then held privately for review. Approved photos may be shown with the sighting.</p>
+            <label class="photo-consent" for="photo-consent">
+                <input type="checkbox" id="photo-consent">
+                <span>I understand that my photo will be stored privately for review and may be displayed publicly if approved.</span>
+            </label>
+        </div>
     </div>
     
     <div class="form-row">
