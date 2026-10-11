@@ -134,7 +134,9 @@
 
     <div class="form-row">
         <label for="photo">Upload a photograph (optional)</label>
-        <input type="file" id="photo" name="photo" accept="image/*">
+        <input type="file" id="photo" name="photo" accept="image/jpeg,image/png,image/webp">
+        <p class="form-note">JPEG, PNG or WebP, up to 15 MB. The image is resized and converted before upload, then held privately for review. Approved photos may be shown with the sighting.</p>
+        <label class="form-note"><input type="checkbox" id="photo-consent"> I understand that my photo will be stored privately for review and may be displayed publicly if approved.</label>
     </div>
     
     <div class="form-row">
@@ -184,6 +186,46 @@
 <script>
 const WORKER_URL = "https://floral-dawn-326d.davidaitchison13.workers.dev/";
 
+async function preparePhoto(file) {
+  if (!file) return null;
+  if (!["image/jpeg", "image/png", "image/webp"].includes(file.type) || file.size > 15 * 1024 * 1024) {
+    throw new Error("Choose a JPEG, PNG or WebP image no larger than 15 MB.");
+  }
+  let bitmap;
+  try { bitmap = await createImageBitmap(file); }
+  catch { throw new Error("That image could not be opened. Please choose a JPEG, PNG or WebP photo."); }
+  try {
+    const scale = Math.min(1, 1600 / Math.max(bitmap.width, bitmap.height));
+    const canvas = document.createElement("canvas");
+    canvas.width = Math.max(1, Math.round(bitmap.width * scale));
+    canvas.height = Math.max(1, Math.round(bitmap.height * scale));
+    const context = canvas.getContext("2d");
+    context.fillStyle = "#ffffff";
+    context.fillRect(0, 0, canvas.width, canvas.height);
+    context.drawImage(bitmap, 0, 0, canvas.width, canvas.height);
+    let blob = await new Promise(resolve => canvas.toBlob(resolve, "image/jpeg", 0.78));
+    if (!blob) throw new Error("The photo could not be prepared. Please try another image.");
+    if (blob.size > 550000) blob = await new Promise(resolve => canvas.toBlob(resolve, "image/jpeg", 0.55));
+    if (!blob || blob.size > 550000) throw new Error("This photo is still too large after compression. Please choose a smaller image.");
+    const base64 = await new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = () => resolve(String(reader.result).split(",")[1]);
+      reader.onerror = () => reject(new Error("The photo could not be read. Please try again."));
+      reader.readAsDataURL(blob);
+    });
+    return { mimeType: "image/jpeg", base64 };
+  } finally {
+    bitmap.close();
+  }
+}
+
+const photoInput = document.getElementById("photo");
+const photoConsent = document.getElementById("photo-consent");
+photoInput.addEventListener("change", () => {
+  photoConsent.required = photoInput.files.length > 0;
+  if (!photoInput.files.length) photoConsent.checked = false;
+});
+
 function showSubmissionError(message) {
   alert(message || "Your sighting could not be submitted. Please try again later.");
 }
@@ -194,7 +236,13 @@ document.getElementById("sighting-form").addEventListener("submit", async functi
   const submitButton = form.querySelector('button[type="submit"]');
   submitButton.disabled = true;
 
-  const photoInput = document.getElementById("photo");
+  try {
+  const photoFile = photoInput.files[0] || null;
+  if (photoFile && !photoConsent.checked) {
+    submitButton.disabled = false;
+    photoConsent.focus();
+    return;
+  }
   const payload = {
     specimenType: document.getElementById("specimen").value,
     species: document.getElementById("species").value,
@@ -204,7 +252,8 @@ document.getElementById("sighting-form").addEventListener("submit", async functi
     timeOfDay: document.getElementById("time").value,
     count: document.getElementById("count").value,
     weather: document.getElementById("weather").value,
-    photoFilename: photoInput.files.length ? photoInput.files[0].name : "",
+    photo: await preparePhoto(photoFile),
+    photoConsent: photoConsent.checked,
     observerName: document.getElementById("observer").value,
     email: document.getElementById("email").value,
     phone: document.getElementById("phone").value,
@@ -238,12 +287,24 @@ document.getElementById("sighting-form").addEventListener("submit", async functi
     alert("Your sighting has been received and is being processed, but the confirmation summary could not be shown.");
     form.reset();
 }
-} catch (error) {
+  } catch (error) {
     if (window.turnstile) window.turnstile.reset();
     showSubmissionError(error.message);
   } finally {
     submitButton.disabled = false;
   }
+  } catch (error) {
+    if (window.turnstile) window.turnstile.reset();
+    showSubmissionError(error.message);
+    submitButton.disabled = false;
+  }
+});
+
+document.getElementById("sighting-form").addEventListener("reset", () => {
+  setTimeout(() => {
+    photoConsent.required = false;
+    photoConsent.checked = false;
+  }, 0);
 });
 </script>
 
