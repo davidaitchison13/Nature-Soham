@@ -77,14 +77,12 @@
                     <option value="species">Species A–Z</option>
                 </select>
             </div>
-            <div class="query-field query-photo-filter">
-                <label for="photo-only">
-                    <input id="photo-only" name="photoOnly" type="checkbox">
-                    Only show sightings with a photo
-                </label>
-            </div>
         </div>
         <div class="query-actions">
+            <label class="photo-only-toggle" for="photo-only">
+                <input id="photo-only" name="photoOnly" type="checkbox">
+                <span>Only show sightings with a photo</span>
+            </label>
             <button type="submit">Search</button>
             <button type="reset" class="secondary-button">Clear filters</button>
             <button type="button" id="export-results">Export results as CSV</button>
