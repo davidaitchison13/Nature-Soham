@@ -647,6 +647,30 @@ main.sightings-page form#query-form.query-panel {
     font-weight: bold;
 }
 
+.photo-only-toggle {
+    display: inline-flex;
+    flex: 0 1 auto;
+    align-items: center;
+    gap: .5rem;
+    min-height: 2.7rem;
+    padding: 0 .35rem;
+    color: var(--forest-green);
+    font-weight: bold;
+    line-height: 1.35;
+    cursor: pointer;
+}
+
+.photo-only-toggle input[type="checkbox"] {
+    flex: 0 0 auto;
+    width: 1.1rem;
+    height: 1.1rem;
+    min-height: 0;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    accent-color: var(--forest-green);
+}
+
 .query-field input,
 .query-field select {
     box-sizing: border-box;
