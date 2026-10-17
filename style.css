@@ -252,11 +252,17 @@ form {
     resize: vertical;
 }
 
-.location-input-controls {
+.location-button-row {
+    margin-top: -0.5rem;
+}
+
+.location-button-row > span {
+    flex: 0 0 200px;
+}
+
+.location-button-row > button {
     flex: 1;
-    min-width: 0;
-    display: grid;
-    gap: 0.6rem;
+    width: 100%;
 }
 
 .location-dialog {
@@ -1152,6 +1158,10 @@ main.confirmation-page {
 
     .form-row label {
         width: auto;
+    }
+
+    .location-button-row > span {
+        display: none;
     }
 
     .photo-row > label {
