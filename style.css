@@ -496,6 +496,31 @@ form {
     color: #444;
 }
 
+.location-picker-mode .site-header,
+.location-picker-mode .main-nav,
+.location-picker-mode .site-footer,
+.location-picker-mode main > h1,
+.location-picker-mode main > p {
+    display: none;
+}
+
+.location-picker-mode body {
+    margin: 0;
+    padding: 0.5rem;
+}
+
+.location-picker-mode main {
+    width: 100%;
+    margin: 0;
+}
+
+.location-picker-mode .location-panel {
+    max-width: none;
+    margin: 0 auto;
+    padding: 1rem;
+    border: 0;
+}
+
 .map-frame {
     width: 100%;
     height: 320px;
