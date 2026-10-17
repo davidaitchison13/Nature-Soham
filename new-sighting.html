@@ -178,6 +178,13 @@
 
 </form>
 
+<div id="processing-overlay" class="processing-overlay" role="status" aria-live="polite" hidden>
+    <div class="processing-card">
+        <span class="processing-spinner" aria-hidden="true"></span>
+        <p>Preparing and submitting your sighting…</p>
+    </div>
+</div>
+
 <dialog id="location-dialog" class="location-dialog" aria-label="Set your sighting location">
     <div class="location-dialog-heading">
         <h2>Set your sighting location</h2>
@@ -238,6 +245,7 @@ async function preparePhoto(file) {
 
 const photoInput = document.getElementById("photo");
 const photoConsent = document.getElementById("photo-consent");
+const processingOverlay = document.getElementById("processing-overlay");
 const locationFromUrl = new URLSearchParams(window.location.search).get("location");
 if (locationFromUrl) document.getElementById("location").value = locationFromUrl;
 const locationDialog = document.getElementById("location-dialog");
@@ -271,6 +279,8 @@ document.getElementById("sighting-form").addEventListener("submit", async functi
     photoConsent.focus();
     return;
   }
+  processingOverlay.hidden = false;
+  await new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve)));
   const payload = {
     specimenType: document.getElementById("specimen").value,
     species: document.getElementById("species").value,
@@ -312,16 +322,19 @@ document.getElementById("sighting-form").addEventListener("submit", async functi
         }));
     window.location.href = "submission-confirmation.html";
 } catch {
+    processingOverlay.hidden = true;
     alert("Your sighting has been received and is being processed, but the confirmation summary could not be shown.");
     form.reset();
 }
   } catch (error) {
+    processingOverlay.hidden = true;
     if (window.turnstile) window.turnstile.reset();
     showSubmissionError(error.message);
   } finally {
     submitButton.disabled = false;
   }
   } catch (error) {
+    processingOverlay.hidden = true;
     if (window.turnstile) window.turnstile.reset();
     showSubmissionError(error.message);
     submitButton.disabled = false;
