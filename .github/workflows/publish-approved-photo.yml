@@ -1,0 +1,108 @@
+name: Publish approved photo link
+
+on:
+  workflow_dispatch:
+    inputs:
+      sighting_id:
+        description: SightingID from Database.csv
+        required: true
+        type: string
+      drive_file_url:
+        description: Approved photo's Google Drive share URL
+        required: true
+        type: string
+  repository_dispatch:
+    types: [approved_photo_ready_v1]
+
+permissions:
+  contents: write
+
+concurrency:
+  group: publish-approved-photo
+  cancel-in-progress: false
+
+jobs:
+  publish-photo-link:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Add the approved Drive link to the sighting
+        env:
+          SIGHTING_ID: ${{ github.event_name == 'workflow_dispatch' && inputs.sighting_id || github.event.client_payload.sighting_id }}
+          DRIVE_FILE_URL: ${{ github.event_name == 'workflow_dispatch' && inputs.drive_file_url || github.event.client_payload.drive_file_url }}
+        run: |
+          python3 - <<'PY'
+          import csv
+          import os
+          import re
+          import sys
+          from pathlib import Path
+          from urllib.parse import parse_qs, urlparse
+
+          sighting_id = os.environ.get("SIGHTING_ID", "").strip()
+          drive_file_url = os.environ.get("DRIVE_FILE_URL", "").strip()
+          if not sighting_id or len(sighting_id) > 128:
+              sys.exit("Enter a valid SightingID.")
+
+          parsed_url = urlparse(drive_file_url)
+          match = re.fullmatch(r"/file/d/([A-Za-z0-9_-]{1,256})/(?:view|preview)", parsed_url.path)
+          if (parsed_url.scheme != "https" or parsed_url.netloc != "drive.google.com"
+                  or not match or parsed_url.fragment):
+              sys.exit("Enter a Google Drive file share URL in the format https://drive.google.com/file/d/FILE_ID/view.")
+
+          file_id = match.group(1)
+          resource_key = parse_qs(parsed_url.query).get("resourcekey", [""])[0]
+          if resource_key and not re.fullmatch(r"[A-Za-z0-9_-]{1,256}", resource_key):
+              sys.exit("The Google Drive URL contains an invalid resource key.")
+
+          csv_path = Path("Database.csv")
+          with csv_path.open("r", encoding="utf-8-sig", newline="") as source:
+              reader = csv.DictReader(source)
+              fieldnames = reader.fieldnames
+              if not fieldnames or "SightingID" not in fieldnames or "PhotoFilename" not in fieldnames:
+                  sys.exit("Database.csv is missing the expected SightingID or PhotoFilename column.")
+              rows = list(reader)
+
+          matches = [row for row in rows if row.get("SightingID", "").strip() == sighting_id]
+          if len(matches) != 1:
+              sys.exit(f"Expected one sighting with ID {sighting_id}; found {len(matches)}.")
+
+          photo_link = f"https://drive.google.com/file/d/{file_id}/view"
+          if resource_key:
+              photo_link += f"?resourcekey={resource_key}"
+
+          current_value = (matches[0].get("PhotoFilename") or "").strip()
+          current_match = re.fullmatch(
+              r"https://drive\.google\.com/file/d/([A-Za-z0-9_-]+)/(?:view|preview)(?:\?[A-Za-z0-9_=&%-]*)?",
+              current_value,
+          )
+          if current_match and current_match.group(1) != file_id:
+              sys.exit("This sighting already has a different approved Drive link; refusing to replace it.")
+          if current_value == photo_link:
+              print("The approved Drive link is already present; no update is needed.")
+              sys.exit(0)
+          if current_value != f"{sighting_id}.jpg":
+              sys.exit("The sighting does not contain its expected pending photo filename; refusing to update it.")
+
+          matches[0]["PhotoFilename"] = photo_link
+          with csv_path.open("w", encoding="utf-8", newline="") as destination:
+              writer = csv.DictWriter(destination, fieldnames=fieldnames, lineterminator="\n")
+              writer.writeheader()
+              writer.writerows(rows)
+
+          print(f"Added the approved Drive link for {sighting_id}.")
+          PY
+
+      - name: Commit updated database
+        run: |
+          git config user.name "Nature-Soham Bot"
+          git config user.email "actions@github.com"
+          git add Database.csv
+          if git diff --cached --quiet; then
+            echo "Database.csv did not change."
+            exit 0
+          fi
+          git commit -m "Publish approved photo link"
+          git push
