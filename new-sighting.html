@@ -61,7 +61,11 @@
 
     <div class="form-row">
         <label for="location">Where did you see the specimen?</label>
+        <div class="location-input-controls">
         <input type="text" id="location" name="location" required>
+            <input type="text" id="location" name="location" required>
+            <button id="set-gps-location" type="button">Set my GPS Location</button>
+        </div>
     </div>
     
     <div class="form-row">
@@ -174,6 +178,14 @@
 
 </form>
 
+<dialog id="location-dialog" class="location-dialog" aria-label="Set your sighting location">
+    <div class="location-dialog-heading">
+        <h2>Set your sighting location</h2>
+        <button id="close-location-dialog" type="button" aria-label="Close location picker">Close</button>
+    </div>
+    <iframe src="geolocation.html?picker=1" title="Check My Location"></iframe>
+</dialog>
+
 
 </main>
 
@@ -228,6 +240,15 @@ const photoInput = document.getElementById("photo");
 const photoConsent = document.getElementById("photo-consent");
 const locationFromUrl = new URLSearchParams(window.location.search).get("location");
 if (locationFromUrl) document.getElementById("location").value = locationFromUrl;
+const locationDialog = document.getElementById("location-dialog");
+const locationFrame = locationDialog.querySelector("iframe");
+document.getElementById("set-gps-location").addEventListener("click", () => locationDialog.showModal());
+document.getElementById("close-location-dialog").addEventListener("click", () => locationDialog.close());
+window.addEventListener("message", event => {
+  if (event.origin !== window.location.origin || event.source !== locationFrame.contentWindow || event.data?.type !== "nature-soham-location") return;
+  document.getElementById("location").value = event.data.coordinates;
+  locationDialog.close();
+});
 photoInput.addEventListener("change", () => {
   photoConsent.required = photoInput.files.length > 0;
   if (!photoInput.files.length) photoConsent.checked = false;
