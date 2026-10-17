@@ -317,12 +317,23 @@ form {
     gap: 0.65rem;
 }
 
+.observer-controls {
+    flex: 1;
+    min-width: 0;
+    display: grid;
+    gap: 0.65rem;
+}
+
 .photo-upload-controls input[type="file"] {
     box-sizing: border-box;
     max-width: 100%;
 }
 
 .form-note.photo-guidance {
+    margin: 0;
+}
+
+.form-note.observer-guidance {
     margin: 0;
 }
 
@@ -1194,6 +1205,10 @@ main.confirmation-page {
     }
 
     .photo-upload-controls {
+        width: 100%;
+    }
+
+    .observer-controls {
         width: 100%;
     }
 
