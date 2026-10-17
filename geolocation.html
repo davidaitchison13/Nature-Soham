@@ -8,6 +8,11 @@
     <meta name="description" content="Explore browser geolocation for wildlife sightings around Soham.">
     <title>Find My Location – Nature Soham</title>
     <link rel="stylesheet" href="style.css">
+    <script>
+        if (new URLSearchParams(window.location.search).get('picker') === '1') {
+            document.documentElement.classList.add('location-picker-mode');
+        }
+    </script>
 </head>
 <body>
 <header class="site-header">
