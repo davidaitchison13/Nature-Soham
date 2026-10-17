@@ -252,6 +252,44 @@ form {
     resize: vertical;
 }
 
+.location-input-controls {
+    flex: 1;
+    min-width: 0;
+    display: grid;
+    gap: 0.6rem;
+}
+
+.location-dialog {
+    width: min(900px, calc(100% - 2rem));
+    max-width: none;
+    max-height: 90vh;
+    padding: 1rem;
+    border: 2px solid var(--moss-green);
+    border-radius: 10px;
+}
+
+.location-dialog::backdrop {
+    background: rgba(0, 0, 0, 0.65);
+}
+
+.location-dialog-heading {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+}
+
+.location-dialog-heading h2 {
+    margin: 0;
+    color: var(--forest-green);
+}
+
+.location-dialog iframe {
+    width: 100%;
+    height: min(75vh, 760px);
+    border: 0;
+}
+
 .form-note {
     font-size: 0.9rem;
     color: #555;
