@@ -306,7 +306,15 @@ form {
     align-items: flex-start;
 }
 
+.observer-row {
+    align-items: flex-start;
+}
+
 .photo-row > label {
+    padding-top: 0.6rem;
+}
+
+.observer-row > label {
     padding-top: 0.6rem;
 }
 
@@ -1201,6 +1209,10 @@ main.confirmation-page {
     }
 
     .photo-row > label {
+        padding-top: 0;
+    }
+
+    .observer-row > label {
         padding-top: 0;
     }
 
