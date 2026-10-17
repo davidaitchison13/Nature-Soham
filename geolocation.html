@@ -34,6 +34,7 @@
         <p>Choose the button below to ask your browser for your current location. Your browser may ask you to allow access.</p>
         <div class="location-actions">
             <button id="locate-button" type="button">Use my current location</button>
+            <button id="use-location-button" type="button" hidden>Use this Location for a new Sighting</button>
             <button id="copy-button" type="button" hidden>Copy coordinates</button>
             <button id="frame-button" type="button" aria-expanded="false" aria-controls="location-frame" hidden>View in Frame</button>
             <a id="map-link" href="#" target="_blank" rel="noopener noreferrer" hidden>View on OpenStreetMap</a>
@@ -62,6 +63,7 @@
 (() => {
     const locateButton = document.getElementById('locate-button');
     const copyButton = document.getElementById('copy-button');
+    const useLocationButton = document.getElementById('use-location-button');
     const status = document.getElementById('location-status');
     const result = document.getElementById('location-result');
     const mapLink = document.getElementById('map-link');
@@ -93,6 +95,7 @@
         result.hidden = false;
         mapLink.hidden = false;
         copyButton.hidden = false;
+        useLocationButton.hidden = false;
         frameButton.hidden = false;
         status.textContent = 'Location found. Review the coordinates before using them for a sighting.';
         locateButton.disabled = false;
@@ -109,6 +112,7 @@
         result.hidden = false;
         mapLink.hidden = false;
         copyButton.hidden = false;
+        useLocationButton.hidden = false;
         frameButton.hidden = false;
     }
 
@@ -231,6 +235,13 @@
         } catch {
             status.textContent = 'Could not copy automatically. Select and copy the latitude and longitude above.';
         }
+    });
+
+    useLocationButton.addEventListener('click', () => {
+        if (!coordinates) return;
+        const destination = new URL('new-sighting.html', window.location.href);
+        destination.searchParams.set('location', coordinates);
+        window.location.href = destination.href;
     });
 })();
 </script>
