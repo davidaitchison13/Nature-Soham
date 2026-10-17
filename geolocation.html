@@ -239,6 +239,10 @@
 
     useLocationButton.addEventListener('click', () => {
         if (!coordinates) return;
+        if (new URLSearchParams(window.location.search).get('picker') === '1' && window.parent !== window) {
+            window.parent.postMessage({ type: 'nature-soham-location', coordinates }, window.location.origin);
+            return;
+        }
         const destination = new URL('new-sighting.html', window.location.href);
         destination.searchParams.set('location', coordinates);
         window.location.href = destination.href;
