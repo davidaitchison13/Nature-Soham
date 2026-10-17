@@ -226,6 +226,8 @@ async function preparePhoto(file) {
 
 const photoInput = document.getElementById("photo");
 const photoConsent = document.getElementById("photo-consent");
+const locationFromUrl = new URLSearchParams(window.location.search).get("location");
+if (locationFromUrl) document.getElementById("location").value = locationFromUrl;
 photoInput.addEventListener("change", () => {
   photoConsent.required = photoInput.files.length > 0;
   if (!photoInput.files.length) photoConsent.checked = false;
