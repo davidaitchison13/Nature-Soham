@@ -39,19 +39,19 @@
         <p>Choose the button below to ask your browser for your current location. Your browser may ask you to allow access.</p>
         <div class="location-actions">
             <button id="locate-button" type="button">Use my current location</button>
+            <button id="frame-button" type="button" aria-expanded="false" aria-controls="location-frame" hidden>Show Map</button>
             <button id="use-location-button" type="button" hidden>Use this Location</button>
-            <button id="frame-button" type="button" aria-expanded="false" aria-controls="location-frame" hidden>View in Frame</button>
-            <a id="map-link" href="#" target="_blank" rel="noopener noreferrer" hidden>View on OpenStreetMap</a>
         </div>
         <p id="location-status" class="location-status" role="status" aria-live="polite">Location has not been requested.</p>
         <div id="location-frame" class="map-frame" role="application" aria-label="Interactive map. Drag the marker or select a point on the map to adjust the location." hidden></div>
+        <p class="location-map-link"><a id="map-link" href="#" target="_blank" rel="noopener noreferrer" hidden>View on OpenStreetMap</a></p>
         <dl id="location-result" class="coordinate-list" hidden>
             <dt>Latitude</dt><dd id="latitude"></dd>
             <dt>Longitude</dt><dd id="longitude"></dd>
             <dt>Accuracy</dt><dd id="accuracy"></dd>
             <dt>Updated</dt><dd id="updated"></dd>
         </dl>
-        <p class="privacy-note"><strong>Privacy:</strong> Location is requested only when you press the button. This page does not save it. The map loads only when you choose “View in Frame” and sends map requests, including your approximate map area and your browser’s IP address, to OpenStreetMap. Choosing “View on OpenStreetMap” also sends the coordinates to that service.</p>
+        <p class="privacy-note"><strong>Privacy:</strong> Location is requested only when you press the button. This page does not save it. The map loads only when you choose “Show Map” and sends map requests, including your approximate map area and your browser’s IP address, to OpenStreetMap. Choosing “View on OpenStreetMap” also sends the coordinates to that service.</p>
     </section>
 </main>
 <footer class="site-footer">
@@ -193,14 +193,14 @@
         const isOpening = locationFrame.hidden;
         locationFrame.hidden = !isOpening;
         frameButton.setAttribute('aria-expanded', String(isOpening));
-        frameButton.textContent = isOpening ? 'Hide Map' : 'View in Frame';
+        frameButton.textContent = isOpening ? 'Hide Map' : 'Show Map';
         if (isOpening) {
             const [latitude, longitude] = coordinates.split(', ').map(Number);
             frameButton.disabled = true;
             if (!await showInteractiveMap(latitude, longitude)) {
                 locationFrame.hidden = true;
                 frameButton.setAttribute('aria-expanded', 'false');
-                frameButton.textContent = 'View in Frame';
+                frameButton.textContent = 'Show Map';
                 frameButton.disabled = false;
                 return;
             }
