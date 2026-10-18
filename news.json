@@ -1,3 +1,15 @@
 {
-  "posts": []
+  "posts": [
+    {
+      "id": "ba2a489a-2aec-42e7-8013-49db0aff4c12",
+      "title": "Testing - Latest News",
+      "date": "2026-10-18",
+      "summary": "This is just a test - please ignore!",
+      "body": [
+        "Testing 12345"
+      ],
+      "imageUrl": "https://drive.google.com/thumbnail?id=1AuHe2sKtMKqPwY_rlB5JrBirAkOZ3n1N&sz=w1600",
+      "imageAlt": "Suprise Visitor from the continent!"
+    }
+  ]
 }
