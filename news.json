@@ -1,3 +1,19 @@
 {
-  "posts": []
+  "posts": [
+    {
+      "id": "3ad5a36b-cf80-41c1-a0c8-30e7f60e9a2d",
+      "title": "Testing new Article Editor",
+      "date": "2026-10-18 15:15",
+      "summary": "This is a Test - please ignore",
+      "body": [
+        "A",
+        "B",
+        "C",
+        "Testing",
+        "123"
+      ],
+      "imageUrl": "https://drive.google.com/thumbnail?id=1rGZ15ZQ4nvgyiYtce3QRdohywNC9PoSO&sz=w1600",
+      "imageAlt": "Fly Orchid"
+    }
+  ]
 }
