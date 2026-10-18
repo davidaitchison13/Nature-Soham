@@ -10,6 +10,8 @@ This folder contains the source for a separate Google Apps Script web app. The e
 4. Deploy as a web app that **executes as the user accessing it** and requires a signed-in Google account. The server checks the account email against `NEWS_ALLOWED_EMAILS`. If the editor will sign in with a different account, add that address to this property after setup and give it access to the posts spreadsheet and image folder.
 5. Share the web-app URL with the editor and bookmark it. Drafts stay private. Pressing **Publish** makes the chosen photo viewable by link and commits the post to `news.json` on `main`.
 
+The editor includes a **Manage articles** page with Published, Unpublished, Archived, and Saved for Later statuses. Unpublishing or archiving removes the article from the public `news.json` feed and makes its uploaded photo private again. The post remains in the private store; archived posts can be restored to Saved for Later and published again.
+
 The `news.json` file is the public feed used by `news.html`. Post text is rendered as text rather than HTML. The publisher takes a script lock and replaces a post by its stable ID, so retrying a publish does not create a second copy.
 
 ## Important deployment check

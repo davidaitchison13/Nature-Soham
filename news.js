@@ -12,7 +12,12 @@ async function loadNews() {
 
         const data = await response.json();
         const posts = Array.isArray(data.posts) ? data.posts : [];
-        posts.sort((a, b) => String(b.date || "").localeCompare(String(a.date || "")));
+        posts.sort((a, b) => {
+            const dateDifference = parsePostDateTime(b.date) - parsePostDateTime(a.date);
+            return Number.isNaN(dateDifference) || dateDifference === 0
+                ? String(b.date || "").localeCompare(String(a.date || ""))
+                : dateDifference;
+        });
 
         list.replaceChildren();
         if (posts.length === 0) {
@@ -39,10 +44,18 @@ function createNewsArticle(post) {
     const date = document.createElement("time");
     date.className = "news-date";
     date.dateTime = String(post.date || "");
-    const parsedDate = new Date(`${post.date}T12:00:00`);
-    date.textContent = Number.isNaN(parsedDate.getTime())
-        ? String(post.date || "")
-        : new Intl.DateTimeFormat("en-GB", { day: "numeric", month: "long", year: "numeric" }).format(parsedDate);
+    const postDate = String(post.date || "");
+    const parsedDate = parsePostDateTime(postDate);
+    if (Number.isNaN(parsedDate)) {
+        date.textContent = postDate;
+    } else {
+        const dateOptions = { day: "numeric", month: "long", year: "numeric" };
+        const dateText = new Intl.DateTimeFormat("en-GB", dateOptions).format(new Date(parsedDate));
+        const timeMatch = postDate.match(/T(\d{2}):(\d{2})/);
+        date.textContent = timeMatch
+            ? `${dateText} at ${new Intl.DateTimeFormat("en-GB", { hour: "2-digit", minute: "2-digit", hourCycle: "h23" }).format(new Date(parsedDate))}`
+            : dateText;
+    }
     article.append(date);
 
     if (post.imageUrl && isHttpsUrl(post.imageUrl)) {
@@ -70,6 +83,16 @@ function createNewsArticle(post) {
     }
 
     return article;
+}
+
+function parsePostDateTime(value) {
+    const match = String(value || "").match(/^(\d{4})-(\d{2})-(\d{2})(?:T(\d{2}):(\d{2}))?$/);
+    if (!match) return NaN;
+    const [, year, month, day, hours = "00", minutes = "00"] = match;
+    const date = new Date(Number(year), Number(month) - 1, Number(day), Number(hours), Number(minutes));
+    if (date.getFullYear() !== Number(year) || date.getMonth() !== Number(month) - 1 ||
+        date.getDate() !== Number(day) || date.getHours() !== Number(hours) || date.getMinutes() !== Number(minutes)) return NaN;
+    return date.getTime();
 }
 
 function isHttpsUrl(value) {
