@@ -1,17 +1,3 @@
 {
-  "posts": [
-    {
-      "id": "3ac109df-aff0-4422-943e-bda424fd27d6",
-      "title": "Test Article 3 - no Photo",
-      "date": "2026-10-18",
-      "summary": "This is an article without a photo",
-      "body": [
-        "Testing\nA\nB\nC\nD",
-        "E",
-        "F"
-      ],
-      "imageUrl": "",
-      "imageAlt": ""
-    }
-  ]
+  "posts": []
 }
