@@ -8,11 +8,15 @@
     :root { color-scheme: light; --forest:#2a4d2e; --moss:#6b8f5e; --gold:#d9a441; --ink:#222; --paper:#f5f7f8; }
     * { box-sizing: border-box; }
     body { margin:0; background:var(--paper); color:var(--ink); font:16px/1.5 Arial,Helvetica,sans-serif; }
-    header { background:var(--forest); color:#fff; padding:1.25rem max(1rem,calc((100vw - 980px)/2)); }
-    header h1 { margin:0; font-size:1.65rem; }
-    header p { margin:.25rem 0 0; color:#e5eee3; }
+    .app-header { display:flex; align-items:center; gap:1rem; background:var(--forest); color:#fff; padding:1rem max(1rem,calc((100vw - 980px)/2)); }
+    .brand-logo { display:block; flex:0 0 auto; width:min(220px,36vw); height:72px; object-fit:contain; padding:.3rem .45rem; background:#fff; border:2px solid var(--gold); border-radius:9px; }
+    .header-copy { min-width:0; }
+    .app-header h1 { margin:0; font-size:1.65rem; }
+    .app-header p { margin:.25rem 0 0; color:#e5eee3; }
     main { width:min(980px,calc(100% - 2rem)); margin:1.5rem auto 3rem; }
-    .layout { display:grid; grid-template-columns:minmax(0,1.4fr) minmax(240px,.8fr); gap:1.25rem; align-items:start; }
+    .app-nav { display:flex; flex-wrap:wrap; gap:.6rem; padding:.75rem max(1rem,calc((100vw - 980px)/2)); background:#fff; border-bottom:1px solid #d7e0d3; }
+    .app-nav button[aria-current="page"] { background:var(--forest); color:#fff; }
+    .page { width:min(980px,100%); margin:0 auto; }
     .panel { background:#fff; border:1px solid #d7e0d3; border-radius:12px; padding:clamp(1rem,3vw,1.5rem); box-shadow:0 3px 12px #2a4d2e12; }
     h2 { margin:.1rem 0 1rem; color:var(--forest); font-size:1.25rem; }
     label { display:block; margin:1rem 0 .35rem; color:var(--forest); font-weight:700; }
@@ -26,23 +30,34 @@
     button:disabled { opacity:.6; cursor:wait; }
     .notice { min-height:1.5em; margin:.9rem 0 0; color:var(--forest); }
     .notice.error { color:#9b2727; }
-    .post-list { display:grid; gap:.7rem; }
-    .post-item { width:100%; padding:.75rem; background:#f7f9f6; color:var(--ink); text-align:left; border:1px solid #d7e0d3; }
-    .post-item strong,.post-item small { display:block; }
-    .post-item small { margin-top:.2rem; color:#5e665c; }
+    .post-list { display:grid; gap:.8rem; }
+    .article-card { padding:1rem; background:#f7f9f6; border:1px solid #d7e0d3; border-radius:9px; }
+    .article-card h3 { margin:0; color:var(--forest); }
+    .article-meta { margin:.2rem 0 .5rem; color:#5e665c; font-size:.9rem; }
+    .status { display:inline-block; padding:.15rem .55rem; border-radius:999px; background:#e8eee6; color:var(--forest); font-size:.85rem; font-weight:700; }
+    .article-actions { display:flex; flex-wrap:wrap; gap:.5rem; margin-top:.75rem; }
+    .article-actions button { padding:.5rem .75rem; font-size:.92rem; }
     .preview { border-top:1px solid #e1e7de; margin-top:1rem; padding-top:1rem; }
     .preview h3 { margin:.2rem 0; color:var(--forest); }
     .preview img { display:block; max-width:100%; max-height:240px; margin:.75rem auto; border-radius:7px; }
-    @media(max-width:720px) { .layout { grid-template-columns:1fr; } }
+    @media(max-width:560px) { .app-nav { flex-wrap:wrap; } }
+    @media(max-width:560px) { .app-header { align-items:flex-start; flex-direction:column; } .brand-logo { width:min(240px,100%); } }
   </style>
 </head>
 <body>
-  <header>
-    <h1>Nature Soham News Editor</h1>
-    <p>Write a post, save a draft, preview it, then publish when it is ready.</p>
+  <header class="app-header">
+    <img class="brand-logo" src="https://nature-soham.org.uk/assets/images/nature-soham-logo-trimmed-white.png" alt="Nature Soham Wildlife Logo">
+    <div class="header-copy">
+      <h1>Nature Soham News Editor</h1>
+      <p>Write a post, save a draft, preview it, then publish when it is ready.</p>
+    </div>
   </header>
+  <nav class="app-nav" aria-label="News editor pages">
+    <button id="write-tab" type="button" aria-current="page">Write a post</button>
+    <button id="manage-tab" type="button" class="secondary">Manage articles</button>
+  </nav>
   <main>
-    <div class="layout">
+    <section id="write-page" class="page">
       <section class="panel" aria-labelledby="editor-heading">
         <h2 id="editor-heading">Write a news post</h2>
         <form id="post-form">
@@ -52,6 +67,8 @@
           <input id="title" maxlength="160" required autocomplete="off">
           <label for="date">Date</label>
           <input id="date" type="date" required>
+          <label for="time">Time</label>
+          <input id="time" type="time" required>
           <label for="summary">Short introduction</label>
           <textarea id="summary" maxlength="500" rows="3" required></textarea>
           <p class="hint">This appears near the top of the post and should be a sentence or two.</p>
@@ -73,33 +90,48 @@
         <p id="notice" class="notice" role="status" aria-live="polite"></p>
         <section id="preview" class="preview" hidden aria-label="Post preview"></section>
       </section>
-      <aside class="panel" aria-labelledby="saved-heading">
-        <h2 id="saved-heading">Saved posts</h2>
-        <div id="post-list" class="post-list" aria-live="polite">Loading saved posts…</div>
-      </aside>
-    </div>
+      </section>
+    <section id="manage-page" class="page" hidden>
+      <section class="panel" aria-labelledby="manage-heading">
+        <h2 id="manage-heading">Manage articles</h2>
+        <p id="manage-notice" class="notice" role="status" aria-live="polite"></p>
+        <p class="hint">Review every article and its status. Unpublishing removes it from the website but keeps it here.</p>
+        <div id="post-list" class="post-list" aria-live="polite">Loading articles…</div>
+      </section>
+    </section>
   </main>
   <script>
     const form = document.getElementById("post-form");
     const notice = document.getElementById("notice");
     const postList = document.getElementById("post-list");
     const preview = document.getElementById("preview");
-    const buttons = [...document.querySelectorAll("button")];
+    const actionButtons = [...document.querySelectorAll("#post-form button")];
     let posts = [];
 
     document.getElementById("date").value = localDateString();
+    document.getElementById("time").value = localTimeString();
     document.getElementById("save-button").addEventListener("click", () => saveDraft(false));
     document.getElementById("publish-button").addEventListener("click", () => saveDraft(true));
     document.getElementById("preview-button").addEventListener("click", showPreview);
     document.getElementById("new-button").addEventListener("click", clearForm);
+    document.getElementById("write-tab").addEventListener("click", () => { clearForm(); showPage("write"); });
+    document.getElementById("manage-tab").addEventListener("click", () => showPage("manage"));
     loadPosts();
 
-    function setBusy(busy) { buttons.forEach(button => button.disabled = busy); }
-    function say(message, isError) { notice.textContent = message; notice.classList.toggle("error", Boolean(isError)); }
+    function setBusy(busy) { actionButtons.forEach(button => button.disabled = busy); }
+    function say(message, isError) {
+      [notice, document.getElementById("manage-notice")].filter(Boolean).forEach(target => {
+        target.textContent = message; target.classList.toggle("error", Boolean(isError));
+      });
+    }
     function localDateString() {
       const now = new Date();
       const local = new Date(now.getTime() - now.getTimezoneOffset() * 60000);
       return local.toISOString().slice(0, 10);
+    }
+    function localTimeString() {
+      const now = new Date();
+      return String(now.getHours()).padStart(2, "0") + ":" + String(now.getMinutes()).padStart(2, "0");
     }
 
     function loadPosts() {
@@ -107,26 +139,87 @@
         posts = Array.isArray(items) ? items : [];
         drawPosts();
       }).withFailureHandler(error => {
-        postList.textContent = "Could not load saved posts.";
+        postList.textContent = "Could not load articles.";
         say(error.message || String(error), true);
       }).listNewsPosts();
     }
 
     function drawPosts() {
       postList.replaceChildren();
-      if (!posts.length) { postList.textContent = "No posts yet. Start by writing a new one."; return; }
+      if (!posts.length) { postList.textContent = "No articles yet. Start by writing a new one."; return; }
       posts.forEach(post => {
-        const button = document.createElement("button");
-        button.type = "button";
-        button.className = "post-item";
+        const card = document.createElement("article");
+        card.className = "article-card";
         const title = document.createElement("strong");
         title.textContent = post.title || "Untitled post";
-        const detail = document.createElement("small");
-        detail.textContent = `${post.date || "No date"} · ${post.status || "draft"}`;
-        button.append(title, detail);
-        button.addEventListener("click", () => editPost(post.id));
-        postList.append(button);
+        const heading = document.createElement("h3");
+        heading.append(title);
+        const meta = document.createElement("p");
+        meta.className = "article-meta";
+        meta.textContent = post.date || "No date";
+        const status = document.createElement("span");
+        status.className = "status";
+        status.textContent = statusLabel(post.status);
+        const actions = document.createElement("div");
+        actions.className = "article-actions";
+        addAction(actions, "Edit", () => { editPost(post.id); showPage("write"); });
+        if (post.status === "published") {
+          addAction(actions, "Unpublish", () => changeStatus(post, "unpublished", "Unpublish this article? It will be removed from the website."));
+        } else {
+          addAction(actions, "Publish", () => publishSavedPost(post.id));
+        }
+        if (post.status === "archived") {
+          addAction(actions, "Restore", () => changeStatus(post, "draft", "Restore this article to Saved for Later?"), true);
+        } else {
+          addAction(actions, "Archive", () => changeStatus(post, "archived", "Archive this article?"), true);
+        }
+        card.append(heading, meta, status, actions);
+        postList.append(card);
       });
+    }
+
+    function statusLabel(status) {
+      return ({ published: "Published", unpublished: "Unpublished", archived: "Archived", draft: "Saved for Later" })[status] || "Saved for Later";
+    }
+
+    function addAction(container, label, handler, secondary) {
+      const button = document.createElement("button");
+      button.type = "button";
+      button.textContent = label;
+      if (secondary) button.className = "secondary";
+      button.addEventListener("click", handler);
+      container.append(button);
+    }
+
+    function showPage(page) {
+      const writing = page === "write";
+      document.getElementById("write-page").hidden = !writing;
+      document.getElementById("manage-page").hidden = writing;
+      document.getElementById("write-tab").setAttribute("aria-current", writing ? "page" : "false");
+      document.getElementById("manage-tab").setAttribute("aria-current", writing ? "false" : "page");
+      document.getElementById("write-tab").classList.toggle("secondary", !writing);
+      document.getElementById("manage-tab").classList.toggle("secondary", writing);
+      if (!writing) loadPosts();
+    }
+
+    function changeStatus(post, status, prompt) {
+      if (!window.confirm(prompt)) return;
+      say("Updating article status…");
+      google.script.run.withSuccessHandler(result => {
+        say(result.message); loadPosts();
+      }).withFailureHandler(error => {
+        say(error.message || String(error), true);
+      }).setNewsPostStatus(post.id, status);
+    }
+
+    function publishSavedPost(id) {
+      if (!window.confirm("Publish this article on the website?")) return;
+      say("Publishing article…");
+      google.script.run.withSuccessHandler(result => {
+        say(result.message); loadPosts();
+      }).withFailureHandler(error => {
+        say(error.message || String(error), true);
+      }).publishNewsPost(id);
     }
 
     function editPost(id) {
@@ -135,13 +228,15 @@
       document.getElementById("post-id").value = post.id;
       document.getElementById("image-file-id").value = post.imageFileId || "";
       document.getElementById("title").value = post.title || "";
-      document.getElementById("date").value = post.date || "";
+      const [postDate, postTime] = String(post.date || "").split("T");
+      document.getElementById("date").value = postDate || "";
+      document.getElementById("time").value = (postTime || "12:00").slice(0, 5);
       document.getElementById("summary").value = post.summary || "";
       document.getElementById("body").value = post.body || "";
       document.getElementById("image-alt").value = post.imageAlt || "";
       document.getElementById("image").value = "";
       preview.hidden = true;
-      say(post.status === "published" ? "Editing a published post. Save changes as a draft, then publish them when ready." : "Draft opened.");
+      say(post.status === "published" ? "Editing a published article. Saving as a draft will remove it from the website until you publish it again." : "Article opened for editing.");
       window.scrollTo({ top: 0, behavior: "smooth" });
     }
 
@@ -151,7 +246,7 @@
           id: document.getElementById("post-id").value,
           imageFileId: document.getElementById("image-file-id").value,
           title: document.getElementById("title").value,
-          date: document.getElementById("date").value,
+          date: document.getElementById("date").value + "T" + document.getElementById("time").value,
           summary: document.getElementById("summary").value,
           body: document.getElementById("body").value,
           imageAlt: document.getElementById("image-alt").value
@@ -173,7 +268,7 @@
         google.script.run.withSuccessHandler(result => {
           document.getElementById("post-id").value = result.id;
           document.getElementById("image").value = "";
-          say(shouldPublish ? "Draft saved. Sending it to the website…" : "Draft saved. It has not been published.");
+          say(shouldPublish ? "Draft saved. Sending it to the website…" : result.message);
           loadPosts();
           if (!shouldPublish) { setBusy(false); return; }
           google.script.run.withSuccessHandler(publishResult => {
@@ -200,6 +295,9 @@
       document.getElementById("post-id").value = "";
       document.getElementById("image-file-id").value = "";
       document.getElementById("date").value = localDateString();
+      document.getElementById("time").value = localTimeString();
+      document.getElementById("image").value = "";
+      preview.replaceChildren();
       preview.hidden = true; say("Ready for a new post.");
     }
   </script>
