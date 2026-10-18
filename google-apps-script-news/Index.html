@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <base target="_top">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    :root { color-scheme: light; --forest:#2a4d2e; --moss:#6b8f5e; --gold:#d9a441; --ink:#222; --paper:#f5f7f8; }
+    * { box-sizing: border-box; }
+    body { margin:0; background:var(--paper); color:var(--ink); font:16px/1.5 Arial,Helvetica,sans-serif; }
+    header { background:var(--forest); color:#fff; padding:1.25rem max(1rem,calc((100vw - 980px)/2)); }
+    header h1 { margin:0; font-size:1.65rem; }
+    header p { margin:.25rem 0 0; color:#e5eee3; }
+    main { width:min(980px,calc(100% - 2rem)); margin:1.5rem auto 3rem; }
+    .layout { display:grid; grid-template-columns:minmax(0,1.4fr) minmax(240px,.8fr); gap:1.25rem; align-items:start; }
+    .panel { background:#fff; border:1px solid #d7e0d3; border-radius:12px; padding:clamp(1rem,3vw,1.5rem); box-shadow:0 3px 12px #2a4d2e12; }
+    h2 { margin:.1rem 0 1rem; color:var(--forest); font-size:1.25rem; }
+    label { display:block; margin:1rem 0 .35rem; color:var(--forest); font-weight:700; }
+    input,textarea { width:100%; padding:.7rem; border:1px solid #91a88b; border-radius:7px; font:inherit; }
+    textarea { min-height:170px; resize:vertical; }
+    .hint { margin:.3rem 0 0; color:#5e665c; font-size:.9rem; }
+    .buttons { display:flex; flex-wrap:wrap; gap:.65rem; margin-top:1.2rem; }
+    button { border:0; border-radius:7px; padding:.75rem 1rem; background:var(--moss); color:#fff; font:inherit; font-weight:700; cursor:pointer; }
+    button:hover { background:var(--forest); }
+    button.secondary { background:#e8eee6; color:var(--forest); }
+    button:disabled { opacity:.6; cursor:wait; }
+    .notice { min-height:1.5em; margin:.9rem 0 0; color:var(--forest); }
+    .notice.error { color:#9b2727; }
+    .post-list { display:grid; gap:.7rem; }
+    .post-item { width:100%; padding:.75rem; background:#f7f9f6; color:var(--ink); text-align:left; border:1px solid #d7e0d3; }
+    .post-item strong,.post-item small { display:block; }
+    .post-item small { margin-top:.2rem; color:#5e665c; }
+    .preview { border-top:1px solid #e1e7de; margin-top:1rem; padding-top:1rem; }
+    .preview h3 { margin:.2rem 0; color:var(--forest); }
+    .preview img { display:block; max-width:100%; max-height:240px; margin:.75rem auto; border-radius:7px; }
+    @media(max-width:720px) { .layout { grid-template-columns:1fr; } }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Nature Soham News Editor</h1>
+    <p>Write a post, save a draft, preview it, then publish when it is ready.</p>
+  </header>
+  <main>
+    <div class="layout">
+      <section class="panel" aria-labelledby="editor-heading">
+        <h2 id="editor-heading">Write a news post</h2>
+        <form id="post-form">
+          <input id="post-id" type="hidden">
+          <input id="image-file-id" type="hidden">
+          <label for="title">Title</label>
+          <input id="title" maxlength="160" required autocomplete="off">
+          <label for="date">Date</label>
+          <input id="date" type="date" required>
+          <label for="summary">Short introduction</label>
+          <textarea id="summary" maxlength="500" rows="3" required></textarea>
+          <p class="hint">This appears near the top of the post and should be a sentence or two.</p>
+          <label for="body">Article</label>
+          <textarea id="body" maxlength="30000" required></textarea>
+          <p class="hint">Leave a blank line between paragraphs.</p>
+          <label for="image">Optional photo</label>
+          <input id="image" type="file" accept="image/jpeg,image/png,image/webp,image/gif">
+          <p class="hint">Choose a photo under 4 MB. It stays private until you publish the post.</p>
+          <label for="image-alt">Photo description</label>
+          <input id="image-alt" maxlength="250" autocomplete="off">
+          <div class="buttons">
+            <button id="save-button" type="button" class="secondary">Save draft</button>
+            <button id="preview-button" type="button" class="secondary">Preview</button>
+            <button id="publish-button" type="button">Publish</button>
+            <button id="new-button" type="button" class="secondary">New post</button>
+          </div>
+        </form>
+        <p id="notice" class="notice" role="status" aria-live="polite"></p>
+        <section id="preview" class="preview" hidden aria-label="Post preview"></section>
+      </section>
+      <aside class="panel" aria-labelledby="saved-heading">
+        <h2 id="saved-heading">Saved posts</h2>
+        <div id="post-list" class="post-list" aria-live="polite">Loading saved posts…</div>
+      </aside>
+    </div>
+  </main>
+  <script>
+    const form = document.getElementById("post-form");
+    const notice = document.getElementById("notice");
+    const postList = document.getElementById("post-list");
+    const preview = document.getElementById("preview");
+    const buttons = [...document.querySelectorAll("button")];
+    let posts = [];
+
+    document.getElementById("date").value = localDateString();
+    document.getElementById("save-button").addEventListener("click", () => saveDraft(false));
+    document.getElementById("publish-button").addEventListener("click", () => saveDraft(true));
+    document.getElementById("preview-button").addEventListener("click", showPreview);
+    document.getElementById("new-button").addEventListener("click", clearForm);
+    loadPosts();
+
+    function setBusy(busy) { buttons.forEach(button => button.disabled = busy); }
+    function say(message, isError) { notice.textContent = message; notice.classList.toggle("error", Boolean(isError)); }
+    function localDateString() {
+      const now = new Date();
+      const local = new Date(now.getTime() - now.getTimezoneOffset() * 60000);
+      return local.toISOString().slice(0, 10);
+    }
+
+    function loadPosts() {
+      google.script.run.withSuccessHandler(items => {
+        posts = Array.isArray(items) ? items : [];
+        drawPosts();
+      }).withFailureHandler(error => {
+        postList.textContent = "Could not load saved posts.";
+        say(error.message || String(error), true);
+      }).listNewsPosts();
+    }
+
+    function drawPosts() {
+      postList.replaceChildren();
+      if (!posts.length) { postList.textContent = "No posts yet. Start by writing a new one."; return; }
+      posts.forEach(post => {
+        const button = document.createElement("button");
+        button.type = "button";
+        button.className = "post-item";
+        const title = document.createElement("strong");
+        title.textContent = post.title || "Untitled post";
+        const detail = document.createElement("small");
+        detail.textContent = `${post.date || "No date"} · ${post.status || "draft"}`;
+        button.append(title, detail);
+        button.addEventListener("click", () => editPost(post.id));
+        postList.append(button);
+      });
+    }
+
+    function editPost(id) {
+      const post = posts.find(item => item.id === id);
+      if (!post) return;
+      document.getElementById("post-id").value = post.id;
+      document.getElementById("image-file-id").value = post.imageFileId || "";
+      document.getElementById("title").value = post.title || "";
+      document.getElementById("date").value = post.date || "";
+      document.getElementById("summary").value = post.summary || "";
+      document.getElementById("body").value = post.body || "";
+      document.getElementById("image-alt").value = post.imageAlt || "";
+      document.getElementById("image").value = "";
+      preview.hidden = true;
+      say(post.status === "published" ? "Editing a published post. Save changes as a draft, then publish them when ready." : "Draft opened.");
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+
+    function readForm() {
+      return new Promise((resolve, reject) => {
+        const data = {
+          id: document.getElementById("post-id").value,
+          imageFileId: document.getElementById("image-file-id").value,
+          title: document.getElementById("title").value,
+          date: document.getElementById("date").value,
+          summary: document.getElementById("summary").value,
+          body: document.getElementById("body").value,
+          imageAlt: document.getElementById("image-alt").value
+        };
+        const file = document.getElementById("image").files[0];
+        if (!file) { resolve(data); return; }
+        if (file.size > 4 * 1024 * 1024) { reject(new Error("Please choose an image under 4 MB.")); return; }
+        const reader = new FileReader();
+        reader.onload = () => { data.imageData = reader.result; data.imageName = file.name; resolve(data); };
+        reader.onerror = () => reject(new Error("The selected image could not be read."));
+        reader.readAsDataURL(file);
+      });
+    }
+
+    async function saveDraft(shouldPublish) {
+      setBusy(true); say(shouldPublish ? "Saving your post before publishing…" : "Saving draft…");
+      try {
+        const data = await readForm();
+        google.script.run.withSuccessHandler(result => {
+          document.getElementById("post-id").value = result.id;
+          document.getElementById("image").value = "";
+          say(shouldPublish ? "Draft saved. Sending it to the website…" : "Draft saved. It has not been published.");
+          loadPosts();
+          if (!shouldPublish) { setBusy(false); return; }
+          google.script.run.withSuccessHandler(publishResult => {
+            say(publishResult.message); loadPosts(); setBusy(false);
+          }).withFailureHandler(error => { say(error.message || String(error), true); setBusy(false); }).publishNewsPost(result.id);
+        }).withFailureHandler(error => { say(error.message || String(error), true); setBusy(false); }).saveNewsDraft(data);
+      } catch (error) { say(error.message || String(error), true); setBusy(false); }
+    }
+
+    function showPreview() {
+      preview.replaceChildren();
+      const heading = document.createElement("h3"); heading.textContent = document.getElementById("title").value || "Your title";
+      const summary = document.createElement("p"); summary.textContent = document.getElementById("summary").value;
+      const body = document.createElement("p"); body.textContent = document.getElementById("body").value;
+      preview.append(heading, summary, body);
+      const image = document.getElementById("image").files[0];
+      if (image) { const img = document.createElement("img"); img.alt = document.getElementById("image-alt").value; img.src = URL.createObjectURL(image); preview.append(img); }
+      preview.hidden = false;
+      preview.scrollIntoView({ behavior: "smooth", block: "nearest" });
+    }
+
+    function clearForm() {
+      form.reset();
+      document.getElementById("post-id").value = "";
+      document.getElementById("image-file-id").value = "";
+      document.getElementById("date").value = localDateString();
+      preview.hidden = true; say("Ready for a new post.");
+    }
+  </script>
+</body>
+</html>
