@@ -128,6 +128,11 @@ body {
     transform: scale(1.05);
 }
 
+.main-nav a[aria-current="page"] {
+    background: #fff;
+    color: var(--forest-green);
+}
+
 /* ===========================
    Main Content Area
    =========================== */
@@ -136,6 +141,86 @@ main {
     max-width: 900px;
     margin: 2rem auto;
     padding: 1rem;
+}
+
+/* ===========================
+   Latest News
+   =========================== */
+
+.news-page {
+    width: min(900px, calc(100% - 2rem));
+    box-sizing: border-box;
+}
+
+.news-intro {
+    margin: 0 auto 2rem;
+}
+
+.news-intro h1 {
+    margin: 0.25rem 0 0.75rem;
+    color: var(--forest-green);
+}
+
+.news-intro p {
+    line-height: 1.6;
+}
+
+.news-intro .eyebrow {
+    margin: 0;
+    color: var(--earth-brown);
+    font-size: 0.9rem;
+    font-weight: bold;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
+.news-status {
+    color: #4b5849;
+}
+
+.news-list {
+    display: grid;
+    gap: 1.25rem;
+    text-align: left;
+}
+
+.news-card {
+    padding: clamp(1rem, 3vw, 1.75rem);
+    border: 1px solid #d7e0d3;
+    border-radius: 12px;
+    background: #fff;
+    box-shadow: 0 3px 12px rgba(42, 77, 46, 0.08);
+}
+
+.news-card h2 {
+    margin: 0 0 0.35rem;
+    color: var(--forest-green);
+    line-height: 1.25;
+}
+
+.news-date {
+    display: block;
+    margin-bottom: 1rem;
+    color: #596357;
+    font-size: 0.95rem;
+}
+
+.news-card p {
+    line-height: 1.7;
+}
+
+.news-card .news-summary {
+    font-size: 1.08rem;
+    font-weight: 600;
+}
+
+.news-image {
+    display: block;
+    width: 100%;
+    max-height: 460px;
+    margin: 1rem auto;
+    border-radius: 8px;
+    object-fit: cover;
 }
 
 /* ===========================
