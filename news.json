@@ -1,3 +1,18 @@
 {
-  "posts": []
+  "posts": [
+    {
+      "id": "2dcbe732-ee59-4b27-bd0f-4d9d5603ead3",
+      "title": "Next Meeting of Nature Soham",
+      "date": "2026-12-07 19:30",
+      "summary": "A pre Christmas get-together  to look at some of the wildlife we include in Christmas. Also your ideas for meetings, activities, discussions etc  in the New Year.",
+      "body": [
+        "This group is for you and the community so we need your input to do what you want!",
+        "We want to share our knowledge and experience of wildlife so we can all learn about it. In particular we want to encourage youngsters to get enthused about our wildlife in Soham. We have a lot of green spaces in the parish and some lovely Lodeside walks for us all to enjoy and observe the nature.",
+        "If you see any wildlife please remember to record it in our data base so others can be aware of the life around us.",
+        "We hope to be able to have a work party soon to sow some wildflower seeds in a space down Northfield Park.  Date still to be confirmed so watch this space!!"
+      ],
+      "imageUrl": "https://drive.google.com/thumbnail?id=1wES7KP-PJwdFQoe0vh21OaGFoBmHbwC_&sz=w1600",
+      "imageAlt": "A view across Qua Fen Common to look forward to next year"
+    }
+  ]
 }
