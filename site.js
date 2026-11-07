@@ -1,4 +1,4 @@
-const SITE_UNDER_CONSTRUCTION = true;
+const SITE_UNDER_CONSTRUCTION = false;
 
 document.addEventListener("DOMContentLoaded", () => {
     if (SITE_UNDER_CONSTRUCTION !== true) return;
